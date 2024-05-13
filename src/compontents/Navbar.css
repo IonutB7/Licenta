@@ -1,0 +1,12 @@
+.navbar-container,
+.navbar,
+ul {
+  display: inline-flex;
+  width: min-content;
+}
+ul {
+  list-style: none;
+}
+.navbar-container > * {
+  margin-left: 20px;
+}
