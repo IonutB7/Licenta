@@ -1,12 +1,83 @@
-.navbar-container,
-.navbar,
-ul {
-  display: inline-flex;
-  width: min-content;
+* {
+  font-family: "Varela Round";
+  text-decoration: none;
+  color: #fca311;
 }
+
 ul {
   list-style: none;
+  text-decoration: none;
+}
+
+ul li {
+  margin-right: 40px;
+  display: inline;
+}
+
+.navbar-container {
+  display: inline-flex;
+  width: 100%;
+  height: inherit;
+  align-items: center;
+  font-size: large;
+  position: relative;
 }
 .navbar-container > * {
-  margin-left: 20px;
+  position: absolute;
+  height: 80%;
+  margin: 0px 0px 0px 40px;
+  padding: 0;
+  align-items: center;
+  display: flex;
+}
+.navbar-container > span {
+  font-size: 0.8em;
+}
+.navbar {
+  margin: 0.5em;
+  height: 3em;
+  width: 99%;
+  border-radius: 1.29em;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+.profilePicture {
+  position: absolute;
+  height: 2em;
+  width: 2em;
+  border-radius: 1em;
+  vertical-align: middle;
+  right: 1em;
+}
+
+.navbar-container input {
+  font-size: 0.7em;
+  height: 1.6em;
+  border-radius: 0.83em;
+  border: solid 0.15em #fca311;
+  background-color: transparent;
+  padding-left: 0.7em;
+}
+
+.navbar-mycart {
+  right: 3.5em;
+}
+.navbar-balance {
+  right: 5em;
+}
+.search {
+  right: 10em;
+}
+.navbar-search {
+  margin-left: 0.5em;
+}
+
+.navbar-icon {
+  display: none;
+  right: 50%;
+}
+.logo {
+  right: 50%;
 }
