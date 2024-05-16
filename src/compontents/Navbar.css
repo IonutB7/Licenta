@@ -20,7 +20,6 @@
   width: inherit;
   height: inherit;
   align-items: center;
-
   position: relative;
 }
 
@@ -47,24 +46,6 @@ ul {
   transform: translateX(-50%);
 }
 
-.navbar-container input {
-  width: fit-content;
-  font-size: 1em;
-  height: 1.5em;
-  border-radius: 1.5em;
-  border: solid 0.16em #fca311;
-  background-color: transparent;
-  padding-left: 0.7em;
-}
-
-.search {
-  left: 15em;
-}
-.navbar-search {
-  margin-left: -1.5em;
-  font-size: 0.9em;
-}
-
 .navbar-balance {
   right: 10.5em;
 }
@@ -75,6 +56,7 @@ ul {
 
 .navbar-icon {
   left: 1em;
+  display: none;
 }
 
 .profilePicture {
@@ -107,11 +89,15 @@ ul {
   .navbar-balance {
     top: 0.3em;
   }
+
+  .navbar-icon {
+    display: flex;
+  }
   .navbar-container ul {
+    top: 9em;
     width: 100%;
     height: 9em;
     flex-direction: column;
-    top: 12em;
   }
   .navbar-container ul li {
     height: 3em;
@@ -119,21 +105,14 @@ ul {
     display: flex;
     align-items: center;
   }
-  .search,
+
   .navbar-mycart {
-    align-self: center;
-    left: 50%;
-    transform: translateX(-50%);
-    width: fit-content;
     height: 3em;
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
-  .search input {
-    font-size: 1em;
-    width: fit-content;
-  }
-  .search {
-    top: 6em;
-  }
+
   .navbar-balance {
     background-color: rgba(255, 255, 255, 0.25);
     top: 0.7em;
@@ -144,6 +123,21 @@ ul {
     z-index: 999;
   }
   .navbar-mycart {
-    top: 21em;
+    top: 18em;
+    border-bottom-left-radius: 1.29em;
+    border-bottom-right-radius: 1.29em;
+  }
+
+  .navbar-container ul,
+  .navbar-mycart {
+    left: -110%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    transition: left 0.6s ease;
+  }
+  .navbar-container .active {
+    left: 0;
+    transition: left 0.6s ease;
   }
 }

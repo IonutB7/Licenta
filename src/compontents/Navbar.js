@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
+import { Searchbar } from "./Searchbar.js";
 
 function Navbar() {
   const [click, setClick] = useState(true);
-  const [button, setButton] = useState(true);
+  const [button, setButton] = useState(false);
 
   const handleClick = () => setClick(!click);
 
@@ -22,7 +23,7 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <ul className="navbar-element">
+          <ul className={click ? "navbar-element" : "navbar-element active"}>
             <li>
               <Link to="/" className="bid">
                 Bid
@@ -42,17 +43,27 @@ function Navbar() {
           <Link to="/" className="logo navbar-element">
             BidBay
           </Link>
-          <form className="search navbar-element">
-            <input placeholder="Search item" name="item"></input>
-            <Link to="/" className="navbar-search">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </Link>
-          </form>
+
+          <Searchbar
+            className={
+              click
+                ? "navbar-search navbar-element"
+                : "navbar-search navbar-element active"
+            }
+          />
+
           <Link to="/" className="navbar-balance navbar-element">
             <i className="fa-regular fa-dollar-sign" />
             <span>300</span>
           </Link>
-          <Link to="/" className="navbar-mycart navbar-element">
+          <Link
+            to="/"
+            className={
+              click
+                ? "navbar-mycart navbar-element"
+                : "navbar-mycart navbar-element active"
+            }
+          >
             <i className="fa-solid fa-cart-shopping" />
             <span>My cart</span>
           </Link>
@@ -61,11 +72,15 @@ function Navbar() {
             alt="profile icon"
             className="profilePicture navbar-element"
           ></img>
-          <div className="navbar-icon navbar-element" onClick={handleClick}>
-            <i
-              className={click ? "fa-solid fa-bars" : "fa-solid fa-xmark-large"}
-            />
-          </div>
+          {!button && (
+            <div className="navbar-icon navbar-element" onClick={handleClick}>
+              <i
+                className={
+                  click ? "fa-solid fa-bars" : "fa-solid fa-xmark-large"
+                }
+              />
+            </div>
+          )}
           {button && (
             <Button
               className="navbar-element"
