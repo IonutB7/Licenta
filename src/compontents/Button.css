@@ -1,0 +1,15 @@
+.btn--typeOne {
+  font-size: 1em;
+  border-radius: 1em;
+  border: 2px solid #fca311;
+  color: #242424;
+  background-color: #fca311;
+  height: 100%;
+}
+
+.btn--typeOne:hover {
+  cursor: pointer;
+  background-color: #5b5b5b;
+  color: #fca311;
+  border-color: #5b5b5b;
+}
