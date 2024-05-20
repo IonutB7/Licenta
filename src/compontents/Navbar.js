@@ -40,8 +40,8 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          <Link to="/" className="logo navbar-element">
-            BidBay
+          <Link to="/" className="navbar-element navbar-logo">
+            <img src={require("../images/Logo.png")} alt="Logo" />
           </Link>
 
           <Searchbar

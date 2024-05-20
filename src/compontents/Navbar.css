@@ -41,11 +41,15 @@ ul {
   margin-left: 2em;
 }
 
-.logo {
+.navbar-logo {
   left: 50%;
   transform: translateX(-50%);
+  width: 100px;
+  height: 50px;
 }
-
+.navbar-logo img {
+  width: inherit;
+}
 .navbar-balance {
   right: 10.5em;
 }
@@ -83,7 +87,7 @@ ul {
   .navbar-element {
     height: calc(0.8 * 3em);
   }
-  .logo,
+  .navbar-logo,
   .navbar-icon,
   .profilePicture,
   .navbar-balance {
