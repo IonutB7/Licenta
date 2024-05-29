@@ -1,0 +1,19 @@
+.item-card {
+  border-radius: 1.39em;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+  align-content: center;
+  text-align: center;
+}
+
+.item-photo {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0.1em auto;
+}
+
+.item-card:hover {
+  box-shadow: 0 0 8px rgba(252, 163, 17, 0.95);
+}

@@ -5,6 +5,8 @@ import { Button } from "./Button.js";
 import { auth, db } from "./firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
+import { profilePicturesDb } from "./firebase.js";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
@@ -16,17 +18,32 @@ export const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     if (password === confirmPassword) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
         const user = auth.currentUser;
         console.log(user);
         if (user) {
+          const photo = ref(
+            profilePicturesDb,
+            `profilePictures/${user.uid}/profilePicture`
+          );
+          let profilePic =
+            "https://firebasestorage.googleapis.com/v0/b/bidbay-auth-aa8cb.appspot.com/o/profilePictures%2FUntitled.png?alt=media&token=a74f4908-6758-4004-a1b7-8669719a60cb";
+
+          await uploadBytes(
+            photo,
+            profilePicture === "" ? profilePic : profilePicture
+          );
+          await getDownloadURL(photo).then((url) => {
+            profilePic = url;
+          });
           await setDoc(doc(db, "Users", user.uid), {
             email: user.email,
             username: username,
             address: address,
-            profilePicture: profilePicture,
+            profilePicture: profilePic,
             balance: 0,
           });
         }
@@ -114,7 +131,7 @@ export const Register = () => {
           placeholder="Upload profile picture"
           name="profilePicture"
           id="profilePicture"
-          onChange={(e) => setProfilePicture(e.target.value)}
+          onChange={(e) => setProfilePicture(e.target.files[0])}
         ></input>
 
         <Button

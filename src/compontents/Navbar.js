@@ -59,7 +59,7 @@ function Navbar() {
               </Link>
             </li>
             <li>
-              <Link to="/" className="bid">
+              <Link to="/bid" className="bid">
                 Bid
               </Link>
             </li>
@@ -107,7 +107,7 @@ function Navbar() {
           )}
           {userDetails && (
             <img
-              src={require("../images/Untitled.png")}
+              src={userDetails.profilePicture}
               alt="profile icon"
               className="profilePicture navbar-element"
               onClick={() => setShowInfo(!showInfo)}
@@ -115,11 +115,7 @@ function Navbar() {
           )}
           {!button && (
             <div className="navbar-icon navbar-element" onClick={handleClick}>
-              <i
-                className={
-                  click ? "fa-solid fa-bars" : "fa-solid fa-xmark-large"
-                }
-              />
+              <i className={click ? "fa-solid fa-bars" : "fa-solid fa-xmark"} />
             </div>
           )}
 

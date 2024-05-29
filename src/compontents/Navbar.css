@@ -8,7 +8,7 @@
   margin: 0.5em;
   height: 3em;
   font-size: large;
-
+  z-index: 1;
   border-radius: 1.29em;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -81,7 +81,7 @@ ul {
 
 .userInfo {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 1);
   backdrop-filter: blur(10px);
   position: absolute;
   text-align: center;
@@ -89,12 +89,10 @@ ul {
   right: 0;
   padding: 1em;
   border-radius: 1.39em;
+  z-index: -999;
 }
 
 @media screen and (max-width: 960px) {
-  .navbar-container {
-    height: 90vh;
-  }
   .navbar-element {
     height: calc(0.8 * 3em);
   }
@@ -147,7 +145,7 @@ ul {
   .navbar-mycart {
     left: -110%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     transition: left 0.6s ease;
   }
@@ -157,5 +155,8 @@ ul {
   }
   .userInfo {
     top: 3em;
+  }
+  .btn--mbl {
+    position: relative;
   }
 }

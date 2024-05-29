@@ -1,0 +1,19 @@
+.bidFilters {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  border-radius: 1.39em;
+  padding: 1em;
+  position: relative;
+  bottom: 0;
+  top: 0;
+}
+
+@media screen and (max-width: 720px) {
+  .bidFilters {
+    display: none;
+  }
+}
