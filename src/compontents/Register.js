@@ -29,13 +29,8 @@ export const Register = () => {
             profilePicturesDb,
             `profilePictures/${user.uid}/profilePicture`
           );
-          let profilePic =
-            "https://firebasestorage.googleapis.com/v0/b/bidbay-auth-aa8cb.appspot.com/o/profilePictures%2FUntitled.png?alt=media&token=a74f4908-6758-4004-a1b7-8669719a60cb";
-
-          await uploadBytes(
-            photo,
-            profilePicture === "" ? profilePic : profilePicture
-          );
+          let profilePic = "";
+          await uploadBytes(photo, profilePicture);
           await getDownloadURL(photo).then((url) => {
             profilePic = url;
           });

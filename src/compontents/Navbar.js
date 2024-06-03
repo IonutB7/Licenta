@@ -5,12 +5,16 @@ import { Button } from "./Button.js";
 import { Searchbar } from "./Searchbar.js";
 import { auth, db } from "./firebase.js";
 import { doc, getDoc } from "firebase/firestore";
+import AddItem from "./AddItem.js";
+
+export const Context = React.createContext();
 
 function Navbar() {
   const [click, setClick] = useState(true);
   const [button, setButton] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const [addItem, setAddItem] = useState(false);
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -74,6 +78,12 @@ function Navbar() {
               </Link>
             </li>
           </ul>
+          <button
+            className="additem navbar-element"
+            onClick={() => setAddItem(true)}
+          >
+            Add item
+          </button>
           <Link to="/" className="navbar-element navbar-logo">
             <img src={require("../images/Logo.png")} alt="Logo" />
           </Link>
@@ -145,6 +155,9 @@ function Navbar() {
           </div>
         )}
       </nav>
+      <Context.Provider value={[addItem, setAddItem]}>
+        {addItem && <AddItem />}
+      </Context.Provider>
     </>
   );
 }

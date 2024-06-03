@@ -1,7 +1,7 @@
 import React from "react";
 import "./Item.css";
 
-function Item() {
+export const Item = ({ name, lastBid, buyAmmount, timer }) => {
   return (
     <>
       <li className="item-card">
@@ -10,20 +10,20 @@ function Item() {
           src={require("../images/iph15.png")}
           className="item-photo"
         ></img>
-        <p>Iphone 15 Pink</p>
+        <p>{name}</p>
 
         <p id="last-bid-ammount">
-          <label>Last bid:</label>300
+          <label>Last bid:</label>
+          {lastBid}
         </p>
         <p>
-          Buy for:<span>1500$</span>
+          Buy for:<span>{buyAmmount}$</span>
         </p>
-        <h3>00:05:47</h3>
+        <h3>{timer}</h3>
         <button>buy now</button>
         <input placeholder="type ammount to bid"></input>
         <button>bid</button>
       </li>
     </>
   );
-}
-export default Item;
+};
