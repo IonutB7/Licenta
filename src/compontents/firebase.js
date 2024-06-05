@@ -21,5 +21,5 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth();
 export const db = getFirestore(app);
-export const profilePicturesDb = getStorage(app);
+export const PicturesDb = getStorage(app);
 export default app;

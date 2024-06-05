@@ -5,7 +5,7 @@ import { Button } from "./Button.js";
 import { auth, db } from "./firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
-import { profilePicturesDb } from "./firebase.js";
+import { PicturesDb } from "./firebase.js";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 export const Register = () => {
@@ -23,10 +23,10 @@ export const Register = () => {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
         const user = auth.currentUser;
-        console.log(user);
+
         if (user) {
           const photo = ref(
-            profilePicturesDb,
+            PicturesDb,
             `profilePictures/${user.uid}/profilePicture`
           );
           let profilePic = "";

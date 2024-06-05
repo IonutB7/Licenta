@@ -15,10 +15,11 @@ function Navbar() {
   const [showInfo, setShowInfo] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [addItem, setAddItem] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
-      console.log(user);
+      setCurrentUser(user);
       const docRef = doc(db, "Users", user.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -155,7 +156,7 @@ function Navbar() {
           </div>
         )}
       </nav>
-      <Context.Provider value={[addItem, setAddItem]}>
+      <Context.Provider value={[addItem, setAddItem, currentUser]}>
         {addItem && <AddItem />}
       </Context.Provider>
     </>

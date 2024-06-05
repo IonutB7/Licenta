@@ -1,25 +1,34 @@
-import React from "react";
+import { React } from "react";
 import "./Item.css";
+import CountDown from "react-countdown";
 
-export const Item = ({ name, lastBid, buyAmmount, timer }) => {
+const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
+  if (completed) {
+    return null;
+  }
+  return (
+    <div>
+      Time left: {days}d {hours}h {minutes}m {seconds}s
+    </div>
+  );
+};
+
+export const Item = ({ item }) => {
   return (
     <>
       <li className="item-card">
-        <img
-          alt="product"
-          src={require("../images/iph15.png")}
-          className="item-photo"
-        ></img>
-        <p>{name}</p>
+        <img alt="product" src={item.imgRef} className="item-photo"></img>
+        <p>{item.name}</p>
 
+        <p>{item.description}</p>
         <p id="last-bid-ammount">
           <label>Last bid:</label>
-          {lastBid}
+          {item.startPrice}
         </p>
         <p>
-          Buy for:<span>{buyAmmount}$</span>
+          Buy for:<span>{item.buyPrice}$</span>
         </p>
-        <h3>{timer}</h3>
+        <CountDown date={item.duration} renderer={renderer} />
         <button>buy now</button>
         <input placeholder="type ammount to bid"></input>
         <button>bid</button>
