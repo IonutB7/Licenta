@@ -53,6 +53,9 @@ function AddItem() {
       name: itemName.current.value,
       imgRef: imagine,
       duration: dueDate * 1,
+      itemID: itemID,
+      lastBid: 0,
+      lastBidder: "",
     });
 
     setAddItem(!addItem);

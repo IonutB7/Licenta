@@ -6,7 +6,6 @@ import { Searchbar } from "./Searchbar.js";
 import { auth, db } from "./firebase.js";
 import { doc, getDoc } from "firebase/firestore";
 import AddItem from "./AddItem.js";
-
 export const Context = React.createContext();
 
 function Navbar() {
