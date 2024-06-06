@@ -8,3 +8,6 @@ body {
   width: 100%;
   display: flex;
 }
+.firebase-emulator-warning {
+  display: none;
+}

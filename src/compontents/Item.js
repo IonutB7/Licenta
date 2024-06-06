@@ -22,9 +22,11 @@ export const Item = ({ item, userDetails }) => {
   var ref = doc(db, `Items/${item.itemID}`);
   async function buyItem() {
     if (userDetails.balance >= item.buyPrice) {
-      console.log("poti cumpara produsul");
+      var refUser = doc(db, `Users/${currentUser.uid}`);
+      alert("Prdusul a fost cumparat cu succes!");
+      updateDoc(refUser, { balance: userDetails.balance - item.buyPrice });
     } else {
-      console.log("Nu ai suficienti bani pentru a cumpara produsul!");
+      alert("Nu ai suficienti bani pentru a cumpara produsul!");
     }
   }
 
@@ -34,11 +36,18 @@ export const Item = ({ item, userDetails }) => {
 
   async function handleBid() {
     let bid = bidValue.current.value * 1;
+    if (userDetails.balance < bid) {
+      alert("Nu aveti suficienti bani in balanta");
+      return;
+    }
     if (bid > item.startPrice) {
       updateDoc(ref, { startPrice: bid, lastBidder: currentUser.uid });
     } else {
+      alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
+      return;
     }
   }
+
   return (
     <>
       <li className="item-card">
@@ -60,7 +69,12 @@ export const Item = ({ item, userDetails }) => {
           placeholder="type ammount to bid"
           ref={bidValue}
         ></input>
-        <button onClick={handleDelete}>delete</button>
+        <button onClick={handleBid}>bid</button>
+        {item.sellerId === currentUser.uid && (
+          <div>
+            <button onClick={handleDelete}>Delete</button>
+          </div>
+        )}
       </li>
     </>
   );

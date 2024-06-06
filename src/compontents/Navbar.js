@@ -30,7 +30,7 @@ function Navbar() {
   };
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [currentUser, userDetails]);
 
   async function handleLogout() {
     try {
