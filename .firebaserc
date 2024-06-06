@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "bidbay-auth-aa8cb"
+  },
+  "dataconnectEmulatorConfig": {
+    "postgres": {
+      "localConnectionString": "postgresql://localhost:5432?sslmode=disable"
+    }
+  }
+}
