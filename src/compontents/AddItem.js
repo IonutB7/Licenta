@@ -49,12 +49,11 @@ function AddItem() {
       buyPrice: itemBuyPrice.current.value * 1,
       category: itemCategory.current.value,
       description: itemDescription.current.value,
-      startPrice: itemMinBid.current.value * 1,
+      bid: itemMinBid.current.value * 1,
       name: itemName.current.value,
       imgRef: imagine,
       duration: dueDate,
       itemID: itemID,
-      lastBid: 0,
       lastBidder: "",
     });
 

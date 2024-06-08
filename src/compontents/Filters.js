@@ -13,10 +13,11 @@ function Filters() {
   const filterBrands = (brand, brandArray) => {
     const x = brandArray.indexOf(brand);
     delete brandArray[x];
+    brandsArray.length--;
   };
 
   const setValue = (dest, value) => {
-    dest.key = value;
+    dest.key = value * 1;
   };
 
   useEffect(() => {}, [electronice, autoturisme, bijuterii, imobiliare]);
@@ -29,12 +30,18 @@ function Filters() {
           <input
             type="number"
             placeholder="minPrice"
-            onChange={(e) => setValue(minPrice, e.target.value)}
+            onChange={(e) => {
+              setValue(minPrice, e.target.value);
+            }}
           ></input>
           <input
             type="number"
             placeholder="maxPrice"
-            onChange={(e) => setValue(maxPrice, e.target.value)}
+            onChange={(e) =>
+              e.target.value !== ""
+                ? setValue(maxPrice, e.target.value)
+                : setValue(maxPrice, 999999999)
+            }
           ></input>
         </div>
         <label>Last bid</label>
@@ -42,12 +49,20 @@ function Filters() {
           <input
             type="number"
             placeholder="min last bid"
-            onChange={(e) => setValue(minBid, e.target.value)}
+            onChange={(e) =>
+              e.target.value !== ""
+                ? setValue(minBid, e.target.value)
+                : setValue(minBid, 1)
+            }
           ></input>
           <input
             type="number"
             placeholder="max last bid"
-            onChange={(e) => setValue(maxBid, e.target.value)}
+            onChange={(e) =>
+              e.target.value !== ""
+                ? setValue(maxBid, e.target.value)
+                : setValue(maxBid, 999999999)
+            }
           ></input>
         </div>
         <label for="categorie">Categorie</label>

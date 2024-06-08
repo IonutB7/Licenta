@@ -13,6 +13,26 @@ function Items() {
   const [minPrice, maxPrice, minBid, maxBid, brandsArray] =
     useContext(filtersContext);
 
+  function filterItems(
+    itemPrice,
+    itemBid,
+    itemCategory,
+    minPrice,
+    maxPrice,
+    minBid,
+    maxBid,
+    brandsArray
+  ) {
+    if (itemPrice < minPrice.key) return false;
+    if (itemPrice > maxPrice.key) return false;
+    if (itemBid < minBid.key) return false;
+    if (itemBid > maxBid.key) return false;
+    if (brandsArray.length === 0) return true;
+    if (!brandsArray.includes(itemCategory)) return false;
+
+    return true;
+  }
+
   const fetchItemsData = async () => {
     const itemsDB = await getDocs(collection(db, "Items"));
 
@@ -41,15 +61,11 @@ function Items() {
     fetchUserData();
   }, [items]);
 
+  useEffect(() => {}, [minPrice, maxPrice, minBid, maxBid, brandsArray]);
+
   return (
     <>
       <div className="items-container">
-        <div>{minPrice.key}</div>
-        <div>{maxPrice.key}</div>
-        <div>{minBid.key}</div>
-        <div>{maxBid.key}</div>
-        <div>{brandsArray}</div>
-
         {items && userDetails && (
           <div>
             <Searchbar
@@ -58,13 +74,26 @@ function Items() {
             />
             <ul className="items-list">
               {items.map((doc) => {
-                if (!query)
-                  return <Item item={doc} userDetails={userDetails}></Item>;
-                else {
-                  if (doc.name.includes(query))
+                if (
+                  filterItems(
+                    doc.buyPrice,
+                    doc.bid,
+                    doc.category,
+                    minPrice,
+                    maxPrice,
+                    minBid,
+                    maxBid,
+                    brandsArray
+                  )
+                ) {
+                  if (!query)
                     return <Item item={doc} userDetails={userDetails}></Item>;
-                  else return null;
-                }
+                  else {
+                    if (doc.name.includes(query))
+                      return <Item item={doc} userDetails={userDetails}></Item>;
+                    else return null;
+                  }
+                } else return null;
               })}
             </ul>
           </div>

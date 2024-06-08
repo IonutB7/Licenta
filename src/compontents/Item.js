@@ -46,8 +46,8 @@ export const Item = ({ item, userDetails }) => {
       alert("Nu aveti suficienti bani in balanta");
       return;
     }
-    if (bid > item.startPrice) {
-      updateDoc(ref, { startPrice: bid, lastBidder: currentUser.uid });
+    if (bid > item.bid) {
+      updateDoc(ref, { bid: bid, lastBidder: currentUser.uid });
     } else {
       alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
       return;
@@ -75,7 +75,7 @@ export const Item = ({ item, userDetails }) => {
         <p>Category: {item.category}</p>
         <p id="last-bid-ammount">
           <label>Last bid:</label>
-          {item.startPrice}
+          {item.bid}
         </p>
         <p>
           Buy for:<span>{item.buyPrice}$</span>
