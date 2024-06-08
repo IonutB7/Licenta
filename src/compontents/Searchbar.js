@@ -2,13 +2,12 @@ import React from "react";
 import "./Searchbar.css";
 import { Link } from "react-router-dom";
 
-export const Searchbar = ({ className }) => {
+export const Searchbar = ({ className, onChange }) => {
   return (
-    <form className={`${className}`}>
-      <input placeholder="Search item" name="item"></input>
-      <Link to="/" className="search-icon">
-        <i className="fa-solid fa-magnifying-glass"></i>
-      </Link>
-    </form>
+    <div className={`${className}`}>
+      <input placeholder="Search item" name="item" onChange={onChange}></input>
+
+      <i className="fa-solid fa-magnifying-glass search-icon"></i>
+    </div>
   );
 };

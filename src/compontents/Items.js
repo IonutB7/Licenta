@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./Items.css";
 import { Item } from "./Item.js";
 import { auth, db } from "./firebase.js";
-
+import { Searchbar } from "./Searchbar.js";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { filtersContext } from "./pages/Bid.js";
 
 function Items() {
   const [items, setItems] = useState();
   const [userDetails, setUserDetails] = useState(null);
+  const [query, setQuery] = useState("");
+  const [minPrice, maxPrice, minBid, maxBid, brandsArray] =
+    useContext(filtersContext);
 
   const fetchItemsData = async () => {
     const itemsDB = await getDocs(collection(db, "Items"));
@@ -36,14 +40,31 @@ function Items() {
     fetchItemsData();
     fetchUserData();
   }, [items]);
+
   return (
     <>
       <div className="items-container">
+        <div>{minPrice.key}</div>
+        <div>{maxPrice.key}</div>
+        <div>{minBid.key}</div>
+        <div>{maxBid.key}</div>
+        <div>{brandsArray}</div>
+
         {items && userDetails && (
           <div>
+            <Searchbar
+              className={"search"}
+              onChange={(e) => setQuery(e.target.value)}
+            />
             <ul className="items-list">
               {items.map((doc) => {
-                return <Item item={doc} userDetails={userDetails}></Item>;
+                if (!query)
+                  return <Item item={doc} userDetails={userDetails}></Item>;
+                else {
+                  if (doc.name.includes(query))
+                    return <Item item={doc} userDetails={userDetails}></Item>;
+                  else return null;
+                }
               })}
             </ul>
           </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
-import { Searchbar } from "./Searchbar.js";
+
 import { auth, db } from "./firebase.js";
 import { doc, getDoc } from "firebase/firestore";
 import AddItem from "./AddItem.js";
@@ -87,14 +87,6 @@ function Navbar() {
           <Link to="/" className="navbar-element navbar-logo">
             <img src={require("../images/Logo.png")} alt="Logo" />
           </Link>
-
-          <Searchbar
-            className={
-              click
-                ? "navbar-search navbar-element"
-                : "navbar-search navbar-element active"
-            }
-          />
 
           {userDetails && (
             <Link to="/" className="navbar-balance navbar-element">

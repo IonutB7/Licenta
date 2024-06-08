@@ -8,10 +8,11 @@
 
 .item-photo {
   display: block;
-  width: 100%;
-  max-width: 100%;
+  width: 99%;
+  max-width: 99%;
   height: auto;
-  margin: 0.1em auto;
+  margin: 0.5% 0.5% 0.5% 0.5%;
+  border-radius: 1.39em;
 }
 
 .item-card:hover {

@@ -30,8 +30,8 @@ function AddItem() {
     }
 
     let currentDate = new Date();
-    let dueDate = currentDate.setHours(
-      currentDate.getHours() + itemTimer.current.value
+    let dueDate = currentDate.setMinutes(
+      currentDate.getMinutes() + itemTimer.current.value * 1
     );
     console.log(dueDate);
 
@@ -52,7 +52,7 @@ function AddItem() {
       startPrice: itemMinBid.current.value * 1,
       name: itemName.current.value,
       imgRef: imagine,
-      duration: dueDate * 1,
+      duration: dueDate,
       itemID: itemID,
       lastBid: 0,
       lastBidder: "",
