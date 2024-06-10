@@ -24,16 +24,20 @@ function Navbar() {
   const [newProfilePicture, setNewProfilePicture] = useState();
 
   const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => {
-      setCurrentUser(user);
-      const docRef = doc(db, "Users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setUserDetails(docSnap.data());
-      } else {
-        alert("User is not logged in");
-      }
-    });
+    try {
+      auth.onAuthStateChanged(async (user) => {
+        setCurrentUser(user);
+        const docRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserDetails(docSnap.data());
+        } else {
+          alert("User is not logged in");
+        }
+      });
+    } catch (error) {
+      alert("You must login first");
+    }
   };
   useEffect(() => {
     fetchUserData();
@@ -59,41 +63,53 @@ function Navbar() {
   };
 
   const addBalance = (money) => {
-    if (money > 0) {
-      const refUser = doc(db, "Users", currentUser.uid);
-      updateDoc(refUser, {
-        balance: userDetails.balance + 0.97 * money,
-      });
-      return;
-    } else alert("Introdu o suma valida");
+    try {
+      if (money > 0) {
+        const refUser = doc(db, "Users", currentUser.uid);
+        updateDoc(refUser, {
+          balance: userDetails.balance + 0.97 * money,
+        });
+        return;
+      } else alert("Introdu o suma valida");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const updateUsername = (username) => {
-    if (username !== "") {
-      const refUser = doc(db, "Users", currentUser.uid);
-      updateDoc(refUser, {
-        username: username,
-      });
-    } else {
-      alert("Type a new username");
+    try {
+      if (username !== "") {
+        const refUser = doc(db, "Users", currentUser.uid);
+        updateDoc(refUser, {
+          username: username,
+        });
+      } else {
+        alert("Type a new username");
+      }
+    } catch (error) {
+      alert(error);
     }
   };
 
   const updateProfilePicture = async (profilePicture) => {
-    const photo = ref(
-      PicturesDb,
-      `profilePictures/${currentUser.uid}/profilePicture`
-    );
-    let profilePic = "";
-    await uploadBytes(photo, profilePicture);
-    await getDownloadURL(photo).then((url) => {
-      profilePic = url;
-    });
+    try {
+      const photo = ref(
+        PicturesDb,
+        `profilePictures/${currentUser.uid}/profilePicture`
+      );
+      let profilePic = "";
+      await uploadBytes(photo, profilePicture);
+      await getDownloadURL(photo).then((url) => {
+        profilePic = url;
+      });
 
-    const refUser = doc(db, "Users", currentUser.uid);
-    updateDoc(refUser, {
-      profilePicture: profilePic,
-    });
+      const refUser = doc(db, "Users", currentUser.uid);
+      updateDoc(refUser, {
+        profilePicture: profilePic,
+      });
+    } catch (error) {
+      alert(error);
+    }
   };
   window.addEventListener("resize", showButton);
   return (

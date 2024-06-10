@@ -52,7 +52,7 @@ export const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         ></input>
 
-        <a href="forgotPassword" className="forgotPass">
+        <a href="/forgotpassword" className="forgotPass">
           Forgot passowrd?
         </a>
 

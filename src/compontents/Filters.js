@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./Filters.css";
 import { filtersContext } from "./pages/Bid.js";
-import { Button } from "./Button.js";
+
 function Filters() {
   const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids, setMyBids] =
     useContext(filtersContext);
