@@ -117,7 +117,7 @@ function Navbar() {
               </Link>
             </li>
             <li>
-              <Link to="/" className="faq">
+              <Link to="/faq" className="faq">
                 FAQ
               </Link>
             </li>
@@ -141,19 +141,7 @@ function Navbar() {
               <span>{userDetails.balance}</span>
             </div>
           )}
-          {userDetails && (
-            <Link
-              to="/"
-              className={
-                click
-                  ? "navbar-mycart navbar-element"
-                  : "navbar-mycart navbar-element active"
-              }
-            >
-              <i className="fa-solid fa-cart-shopping" />
-              <span>My cart</span>
-            </Link>
-          )}
+
           {userDetails && (
             <img
               src={userDetails.profilePicture}

@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./compontents/pages/Home";
 import Bid from "./compontents/pages/Bid";
 import Contact from "./compontents/pages/Contact";
+import FAQ from "./compontents/pages/FAQ";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/home" Component={Home} />
             <Route path="/bid" Component={Bid} />
             <Route path="/contact" Component={Contact} />
+            <Route path="/faq" Component={FAQ} />
           </Route>
           <Route path="/login" Component={Login} />
           <Route path="/register" Component={Register} />

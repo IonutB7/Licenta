@@ -10,7 +10,8 @@ function Items() {
   const [items, setItems] = useState();
   const [userDetails, setUserDetails] = useState(null);
   const [query, setQuery] = useState("");
-  const [minPrice, maxPrice, minBid, maxBid, brandsArray] =
+
+  const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids] =
     useContext(filtersContext);
 
   function filterItems(
@@ -75,25 +76,34 @@ function Items() {
             <ul className="items-list">
               {items.map((doc) => {
                 if (
-                  filterItems(
-                    doc.buyPrice,
-                    doc.bid,
-                    doc.category,
-                    minPrice,
-                    maxPrice,
-                    minBid,
-                    maxBid,
-                    brandsArray
-                  )
+                  !myBids ||
+                  (myBids && doc.lastBidder === auth.currentUser.uid)
                 ) {
-                  if (!query)
-                    return <Item item={doc} userDetails={userDetails}></Item>;
-                  else {
-                    if (doc.name.includes(query))
+                  if (
+                    filterItems(
+                      doc.buyPrice,
+                      doc.bid,
+                      doc.category,
+                      minPrice,
+                      maxPrice,
+                      minBid,
+                      maxBid,
+                      brandsArray
+                    )
+                  ) {
+                    if (!query)
                       return <Item item={doc} userDetails={userDetails}></Item>;
-                    else return null;
-                  }
-                } else return null;
+                    else {
+                      if (doc.name.includes(query))
+                        return (
+                          <Item item={doc} userDetails={userDetails}></Item>
+                        );
+                      else return null;
+                    }
+                  } else return null;
+                } else {
+                  return null;
+                }
               })}
             </ul>
           </div>

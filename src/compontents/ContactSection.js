@@ -19,6 +19,7 @@ function ContactSection() {
       type: type.current.value,
       title: title.current.value,
       description: description.current.value,
+      answer: "",
     });
     alert("Message sent successfully");
   };

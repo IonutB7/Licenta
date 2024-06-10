@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./Filters.css";
 import { filtersContext } from "./pages/Bid.js";
-
+import { Button } from "./Button.js";
 function Filters() {
-  const [minPrice, maxPrice, minBid, maxBid, brandsArray] =
+  const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids, setMyBids] =
     useContext(filtersContext);
   const [electronice, setElectronice] = useState(true);
   const [autoturisme, setAutoturisme] = useState(true);
@@ -120,6 +120,15 @@ function Filters() {
             <label>Bijuterii</label>
           </li>
         </ul>
+
+        <div
+          onClick={() => {
+            setMyBids(!myBids);
+          }}
+        >
+          <i className="fa-solid fa-cart-shopping" />
+          <span>My bids</span>
+        </div>
       </form>
     </>
   );
