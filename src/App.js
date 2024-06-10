@@ -6,6 +6,7 @@ import { Register } from "./compontents/Register";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./compontents/pages/Home";
 import Bid from "./compontents/pages/Bid";
+import Contact from "./compontents/pages/Contact";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route index Component={Home} />
             <Route path="/home" Component={Home} />
             <Route path="/bid" Component={Bid} />
+            <Route path="/contact" Component={Contact} />
           </Route>
           <Route path="/login" Component={Login} />
           <Route path="/register" Component={Register} />

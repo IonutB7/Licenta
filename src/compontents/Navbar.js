@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
-
 import { auth, db } from "./firebase.js";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import AddItem from "./AddItem.js";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { PicturesDb } from "./firebase.js";
+
 export const Context = React.createContext();
 
 function Navbar() {
@@ -15,6 +17,11 @@ function Navbar() {
   const [userDetails, setUserDetails] = useState(null);
   const [addItem, setAddItem] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
+  const [showAddBalance, setShowAddBalance] = useState(false);
+  const [moneyDeposit, setMoneyDeposit] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [newProfilePicture, setNewProfilePicture] = useState();
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -51,6 +58,43 @@ function Navbar() {
     }
   };
 
+  const addBalance = (money) => {
+    if (money > 0) {
+      const refUser = doc(db, "Users", currentUser.uid);
+      updateDoc(refUser, {
+        balance: userDetails.balance + 0.97 * money,
+      });
+      return;
+    } else alert("Introdu o suma valida");
+  };
+
+  const updateUsername = (username) => {
+    if (username !== "") {
+      const refUser = doc(db, "Users", currentUser.uid);
+      updateDoc(refUser, {
+        username: username,
+      });
+    } else {
+      alert("Type a new username");
+    }
+  };
+
+  const updateProfilePicture = async (profilePicture) => {
+    const photo = ref(
+      PicturesDb,
+      `profilePictures/${currentUser.uid}/profilePicture`
+    );
+    let profilePic = "";
+    await uploadBytes(photo, profilePicture);
+    await getDownloadURL(photo).then((url) => {
+      profilePic = url;
+    });
+
+    const refUser = doc(db, "Users", currentUser.uid);
+    updateDoc(refUser, {
+      profilePicture: profilePic,
+    });
+  };
   window.addEventListener("resize", showButton);
   return (
     <>
@@ -68,7 +112,7 @@ function Navbar() {
               </Link>
             </li>
             <li>
-              <Link to="/" className="contact">
+              <Link to="/contact" className="contact">
                 Contact
               </Link>
             </li>
@@ -89,10 +133,13 @@ function Navbar() {
           </Link>
 
           {userDetails && (
-            <Link to="/" className="navbar-balance navbar-element">
+            <div
+              onClick={() => setShowAddBalance(!showAddBalance)}
+              className="navbar-balance navbar-element"
+            >
               <i className="fa-regular fa-dollar-sign" />
               <span>{userDetails.balance}</span>
-            </Link>
+            </div>
           )}
           {userDetails && (
             <Link
@@ -133,12 +180,35 @@ function Navbar() {
           )}
         </div>
 
+        {showAddBalance && (
+          <div className="addBalance">
+            <input
+              placeholder="Enter amount"
+              onChange={(e) => {
+                setMoneyDeposit(e.target.value * 1);
+              }}
+            ></input>
+            <button
+              onClick={() => {
+                addBalance(moneyDeposit);
+              }}
+            >
+              Add balance
+            </button>
+          </div>
+        )}
+
         {showInfo && (
           <div className="userInfo">
             <ul>
               <li>{userDetails.username}</li>
-              <li>
-                <a href="/">Settings</a>
+              <li
+                onClick={() => {
+                  setShowSettings(true);
+                  setShowInfo(!showInfo);
+                }}
+              >
+                Settings
               </li>
               <li>
                 <button onClick={handleLogout}>Logout</button>
@@ -150,6 +220,45 @@ function Navbar() {
       <Context.Provider value={[addItem, setAddItem, currentUser]}>
         {addItem && <AddItem />}
       </Context.Provider>
+
+      {showSettings && (
+        <div className="settings">
+          <input
+            type="text"
+            placeholder="New username"
+            onChange={(e) => {
+              setNewUsername(e.target.value);
+            }}
+          ></input>
+          <button
+            onClick={() => {
+              updateUsername(newUsername);
+            }}
+          >
+            Change username
+          </button>
+          <input
+            type="file"
+            onChange={(e) => {
+              setNewProfilePicture(e.target.files[0]);
+            }}
+          ></input>
+          <button
+            onClick={() => {
+              updateProfilePicture(newProfilePicture);
+            }}
+          >
+            Update profile picture
+          </button>
+          <button
+            onClick={() => {
+              setShowSettings(!showSettings);
+            }}
+          >
+            Close
+          </button>
+        </div>
+      )}
     </>
   );
 }

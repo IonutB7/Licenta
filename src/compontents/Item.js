@@ -3,7 +3,7 @@ import "./Item.css";
 import CountDown from "react-countdown";
 import { auth, db } from "./firebase.js";
 
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 
 const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
   if (completed) {
@@ -25,8 +25,15 @@ export const Item = ({ item, userDetails }) => {
     if (userDetails.balance >= item.buyPrice) {
       var refUser = doc(db, `Users/${currentUser.uid}`);
       alert(
-        "Prdusul a fost cumparat cu succes de catre: " + userDetails.username
+        "Produsul a fost cumparat cu succes de catre: " + userDetails.username
       );
+      await setDoc(doc(db, "Sold Items", item.itemID), {
+        name: item.name,
+        boughtBy: currentUser.uid,
+        soldBy: item.sellerId,
+        soldFor: item.buyPrice,
+        deliveryAddress: userDetails.address,
+      });
       await updateDoc(refUser, {
         balance: userDetails.balance - item.buyPrice,
       });
@@ -59,7 +66,16 @@ export const Item = ({ item, userDetails }) => {
       console.log("Nimeni nu a licitat pentru item");
       await deleteDoc(ref);
     } else {
+      const refUser = doc(db, `Users/${item.lastBidder}`);
+      const docSnap = await getDoc(refUser);
       console.log(item.lastBidder + "A castigat licitatia");
+      await setDoc(doc(db, "Sold Items", item.itemID), {
+        name: item.name,
+        boughtBy: item.lastBidder,
+        soldBy: item.sellerId,
+        soldFor: item.bid,
+        deliveryAddress: docSnap.data().address,
+      });
       await deleteDoc(ref);
     }
   }
