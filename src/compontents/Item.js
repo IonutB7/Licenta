@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./Item.css";
 import CountDown from "react-countdown";
-import { auth, db } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 
@@ -16,20 +16,19 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
   );
 };
 
-export const Item = ({ item, userDetails }) => {
+export const Item = ({ item, userDetails, userID }) => {
   const bidValue = useRef();
-  const currentUser = auth.currentUser;
   var ref = doc(db, `Items/${item.itemID}`);
 
   async function buyItem() {
     if (userDetails.balance >= item.buyPrice) {
-      var refUser = doc(db, `Users/${currentUser.uid}`);
+      var refUser = doc(db, `Users/${userID}`);
       alert(
         "Produsul a fost cumparat cu succes de catre: " + userDetails.username
       );
       await setDoc(doc(db, "Sold Items", item.itemID), {
         name: item.name,
-        boughtBy: currentUser.uid,
+        boughtBy: userID,
         soldBy: item.sellerId,
         soldFor: item.buyPrice,
         deliveryAddress: userDetails.address,
@@ -54,7 +53,7 @@ export const Item = ({ item, userDetails }) => {
       return;
     }
     if (bid > item.bid) {
-      updateDoc(ref, { bid: bid, lastBidder: currentUser.uid });
+      updateDoc(ref, { bid: bid, lastBidder: userID });
     } else {
       alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
       return;
@@ -108,7 +107,7 @@ export const Item = ({ item, userDetails }) => {
           ref={bidValue}
         ></input>
         <button onClick={handleBid}>bid</button>
-        {item.sellerId === currentUser.uid && (
+        {item.sellerId === userID && (
           <div>
             <button onClick={handleDelete}>Delete</button>
           </div>

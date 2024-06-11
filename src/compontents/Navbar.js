@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
 import { auth, db } from "./firebase.js";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import AddItem from "./AddItem.js";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { PicturesDb } from "./firebase.js";
+import { userContext } from "./Layout.js";
 
 export const Context = React.createContext();
 
@@ -14,34 +15,14 @@ function Navbar() {
   const [click, setClick] = useState(true);
   const [button, setButton] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
   const [addItem, setAddItem] = useState(false);
-  const [currentUser, setCurrentUser] = useState("");
   const [showAddBalance, setShowAddBalance] = useState(false);
   const [moneyDeposit, setMoneyDeposit] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [newProfilePicture, setNewProfilePicture] = useState();
 
-  const fetchUserData = async () => {
-    try {
-      auth.onAuthStateChanged(async (user) => {
-        setCurrentUser(user);
-        const docRef = doc(db, "Users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserDetails(docSnap.data());
-        } else {
-          alert("User is not logged in");
-        }
-      });
-    } catch (error) {
-      alert("You must login first");
-    }
-  };
-  useEffect(() => {
-    fetchUserData();
-  }, [currentUser, userDetails]);
+  const [userDetails, userID] = useContext(userContext);
 
   async function handleLogout() {
     try {
@@ -65,7 +46,7 @@ function Navbar() {
   const addBalance = (money) => {
     try {
       if (money > 0) {
-        const refUser = doc(db, "Users", currentUser.uid);
+        const refUser = doc(db, "Users", userID);
         updateDoc(refUser, {
           balance: userDetails.balance + 0.97 * money,
         });
@@ -79,7 +60,7 @@ function Navbar() {
   const updateUsername = (username) => {
     try {
       if (username !== "") {
-        const refUser = doc(db, "Users", currentUser.uid);
+        const refUser = doc(db, "Users", userID);
         updateDoc(refUser, {
           username: username,
         });
@@ -93,17 +74,14 @@ function Navbar() {
 
   const updateProfilePicture = async (profilePicture) => {
     try {
-      const photo = ref(
-        PicturesDb,
-        `profilePictures/${currentUser.uid}/profilePicture`
-      );
+      const photo = ref(PicturesDb, `profilePictures/${userID}/profilePicture`);
       let profilePic = "";
       await uploadBytes(photo, profilePicture);
       await getDownloadURL(photo).then((url) => {
         profilePic = url;
       });
 
-      const refUser = doc(db, "Users", currentUser.uid);
+      const refUser = doc(db, "Users", userID);
       updateDoc(refUser, {
         profilePicture: profilePic,
       });
@@ -221,7 +199,7 @@ function Navbar() {
           </div>
         )}
       </nav>
-      <Context.Provider value={[addItem, setAddItem, currentUser]}>
+      <Context.Provider value={[addItem, setAddItem, userID]}>
         {addItem && <AddItem />}
       </Context.Provider>
 

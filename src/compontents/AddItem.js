@@ -8,7 +8,7 @@ import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { db } from "./firebase";
 
 function AddItem() {
-  const [addItem, setAddItem, currentUser] = useContext(Context);
+  const [addItem, setAddItem, userID] = useContext(Context);
   const [error, setError] = useState("");
 
   const itemBuyPrice = useRef();
@@ -45,7 +45,7 @@ function AddItem() {
 
     await setDoc(doc(db, "Items", itemID), {
       createdAt: Timestamp.now(),
-      sellerId: currentUser.uid,
+      sellerId: userID,
       buyPrice: itemBuyPrice.current.value * 1,
       category: itemCategory.current.value,
       description: itemDescription.current.value,

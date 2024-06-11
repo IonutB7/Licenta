@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./Items.css";
 import { Item } from "./Item.js";
-import { auth, db } from "./firebase.js";
+import { db } from "./firebase.js";
 import { Searchbar } from "./Searchbar.js";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { filtersContext } from "./pages/Bid.js";
+import { userContext } from "./Layout.js";
 
 function Items() {
   const [items, setItems] = useState();
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, userID] = useContext(userContext);
   const [query, setQuery] = useState("");
 
   const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids] =
@@ -45,25 +46,8 @@ function Items() {
     setItems(itms);
   };
 
-  const fetchUserData = async () => {
-    try {
-      auth.onAuthStateChanged(async (user) => {
-        const docRef = doc(db, "Users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserDetails(docSnap.data());
-        } else {
-          alert("User is not logged in");
-        }
-      });
-    } catch (error) {
-      alert("You must log in first");
-    }
-  };
-
   useEffect(() => {
     fetchItemsData();
-    fetchUserData();
   }, [items]);
 
   useEffect(() => {}, [minPrice, maxPrice, minBid, maxBid, brandsArray]);
@@ -79,10 +63,7 @@ function Items() {
             />
             <ul className="items-list">
               {items.map((doc) => {
-                if (
-                  !myBids ||
-                  (myBids && doc.lastBidder === auth.currentUser.uid)
-                ) {
+                if (!myBids || (myBids && doc.lastBidder === userID)) {
                   if (
                     filterItems(
                       doc.buyPrice,
@@ -96,11 +77,21 @@ function Items() {
                     )
                   ) {
                     if (!query)
-                      return <Item item={doc} userDetails={userDetails}></Item>;
+                      return (
+                        <Item
+                          item={doc}
+                          userDetails={userDetails}
+                          userID={userID}
+                        ></Item>
+                      );
                     else {
                       if (doc.name.includes(query))
                         return (
-                          <Item item={doc} userDetails={userDetails}></Item>
+                          <Item
+                            item={doc}
+                            userDetails={userDetails}
+                            userID={userID}
+                          ></Item>
                         );
                       else return null;
                     }
