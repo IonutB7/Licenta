@@ -1,27 +1,32 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import "./ContactSection.css";
 import { doc, setDoc } from "firebase/firestore";
-// import { Button } from "./Button";
 import { auth, db } from "./firebase";
+import { userContext } from "./Layout";
+import { v4 as uuidv4 } from "uuid";
 
 function ContactSection() {
   const type = useRef();
   const title = useRef();
   const description = useRef();
+  const [userDetails] = useContext(userContext);
 
   const submit = async (e) => {
     e.preventDefault();
 
     try {
+      let currentUserID = auth.currentUser.uid;
       if (
         type.current.checkValidity() &&
         title.current.checkValidity() &&
         description.current.checkValidity()
       ) {
-        let formID = crypto.randomUUID();
-        let currentUserID = auth.currentUser.uid;
+        let formID = uuidv4();
+
         await setDoc(doc(db, "ContactForms", formID), {
           user: currentUserID,
+          username: userDetails.username,
+          userPhoto: userDetails.profilePicture,
           type: type.current.value,
           title: title.current.value,
           description: description.current.value,
@@ -32,7 +37,7 @@ function ContactSection() {
         alert("Fill all fields");
       }
     } catch (error) {
-      alert("You must be logged in to sumbit a request");
+      alert("User must be logged in to submit");
     }
   };
 

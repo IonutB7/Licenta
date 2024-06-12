@@ -3,12 +3,12 @@ import "./Items.css";
 import { Item } from "./Item.js";
 import { db } from "./firebase.js";
 import { Searchbar } from "./Searchbar.js";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { filtersContext } from "./pages/Bid.js";
 import { userContext } from "./Layout.js";
 
 function Items() {
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
   const [userDetails, userID] = useContext(userContext);
   const [query, setQuery] = useState("");
   const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids] =
@@ -34,21 +34,17 @@ function Items() {
     return true;
   }
 
-  const fetchItemsData = async () => {
-    const itemsDB = await getDocs(collection(db, "Items"));
-
-    const itms = [];
-    itemsDB.forEach((itm) => {
-      itms.push({ ...itm.data(), id: itm.id });
+  useEffect(() => {
+    const fetchItems = onSnapshot(collection(db, "Items"), (snapshot) => {
+      const itms = [];
+      snapshot.forEach((doc) => {
+        itms.push({ ...doc.data(), id: doc.id });
+      });
+      setItems(itms);
     });
 
-    setItems(itms);
-  };
-
-  useEffect(() => {
-    fetchItemsData();
-  });
-  console.log("hello din items!");
+    return () => fetchItems();
+  }, []);
 
   return (
     <>

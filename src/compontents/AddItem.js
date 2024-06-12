@@ -6,6 +6,7 @@ import { Timestamp, doc, setDoc } from "firebase/firestore";
 import { PicturesDb } from "./firebase.js";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { db } from "./firebase";
+import { v4 as uuidv4 } from "uuid";
 
 function AddItem() {
   const [addItem, setAddItem, userID] = useContext(Context);
@@ -43,12 +44,12 @@ function AddItem() {
         currentDate.getMinutes() + itemTimer.current.value * 1
       );
 
-      let itemID = crypto.randomUUID();
-      let imagine = "";
+      let itemID = uuidv4();
+      let image = "";
       const photo = ref(PicturesDb, `itemsPhotos/${itemID}`);
       await uploadBytes(photo, itemPhoto.current.files[0]);
       await getDownloadURL(photo).then((url) => {
-        imagine = url;
+        image = url;
       });
 
       await setDoc(doc(db, "Items", itemID), {
@@ -59,7 +60,7 @@ function AddItem() {
         description: itemDescription.current.value,
         bid: itemMinBid.current.value * 1,
         name: itemName.current.value,
-        imgRef: imagine,
+        imgRef: image,
         duration: dueDate,
         itemID: itemID,
         lastBidder: "",

@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./Item.css";
 import CountDown from "react-countdown";
 import { db } from "./firebase.js";
-import { userContext } from "./Layout.js";
+import { PicturesDb } from "./firebase.js";
 import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
 const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
   if (completed) {
@@ -18,8 +19,8 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
 
 export const Item = ({ item, userDetails, userID }) => {
   const bidValue = useRef();
-  var ref = doc(db, `Items/${item.itemID}`);
-  const [, , updateUserData, setUpdateUserData] = useContext(userContext);
+  var refDb = doc(db, `Items/${item.itemID}`);
+  const photoRef = ref(PicturesDb, `itemsPhotos/${item.itemID}`);
 
   async function buyItem() {
     if (item.bid <= item.buyPrice) {
@@ -36,8 +37,9 @@ export const Item = ({ item, userDetails, userID }) => {
         await updateDoc(refUser, {
           balance: userDetails.balance - item.buyPrice,
         });
-        setUpdateUserData(!updateUserData);
-        deleteDoc(ref);
+
+        deleteDoc(refDb);
+        await deleteObject(photoRef);
         console.log(
           "Produsul a fost cumparat cu succes de catre: " + userDetails.username
         );
@@ -49,8 +51,9 @@ export const Item = ({ item, userDetails, userID }) => {
     }
   }
 
-  const handleDelete = () => {
-    deleteDoc(ref);
+  const handleDelete = async () => {
+    await deleteDoc(refDb);
+    await deleteObject(photoRef);
   };
 
   async function handleBid() {
@@ -60,7 +63,7 @@ export const Item = ({ item, userDetails, userID }) => {
       return;
     }
     if (bid > item.bid) {
-      await updateDoc(ref, { bid: bid, lastBidder: userID });
+      await updateDoc(refDb, { bid: bid, lastBidder: userID });
     } else {
       alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
       return;
@@ -70,7 +73,8 @@ export const Item = ({ item, userDetails, userID }) => {
   async function handleEndBid() {
     if (item.lastBidder === "") {
       console.log("Nimeni nu a licitat pentru item");
-      await deleteDoc(ref);
+      await deleteDoc(refDb);
+      await deleteObject(photoRef);
     } else {
       const refUser = doc(db, `Users/${item.lastBidder}`);
       const docSnap = await getDoc(refUser);
@@ -86,8 +90,9 @@ export const Item = ({ item, userDetails, userID }) => {
       await updateDoc(refUser, {
         balance: docSnap.data().balance - item.bid * 1,
       });
-      setUpdateUserData(!updateUserData);
-      await deleteDoc(ref);
+
+      await deleteDoc(refDb);
+      await deleteObject(photoRef);
     }
   }
   useEffect(() => {}, []);

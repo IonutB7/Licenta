@@ -42,11 +42,9 @@ export const Register = () => {
             balance: 0,
           });
         }
-        console.log("User Registered Successfully!");
+
+        alert("User Registered Successfully!");
         window.location.href = "/login";
-        alert("User Registered Successfully!", {
-          position: "top-center",
-        });
       } catch (error) {
         console.log(error.message);
         alert(error.message, {

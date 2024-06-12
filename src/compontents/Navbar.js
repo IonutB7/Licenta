@@ -24,8 +24,7 @@ function Navbar() {
   const [newAddress, setNewAddress] = useState("");
   const newProfilePicture = useRef();
 
-  const [userDetails, userID, updateUserData, setUpdateUserData] =
-    useContext(userContext);
+  const [userDetails, userID] = useContext(userContext);
 
   async function handleLogout() {
     try {
@@ -53,7 +52,6 @@ function Navbar() {
         updateDoc(refUser, {
           balance: userDetails.balance + 0.97 * money,
         });
-        setUpdateUserData(!updateUserData);
         return;
       } else alert("Introdu o suma valida");
     } catch (error) {
@@ -68,7 +66,8 @@ function Navbar() {
         updateDoc(refUser, {
           username: username,
         });
-        setUpdateUserData(!updateUserData);
+        setShowSettings(false);
+        alert("Username changed successfully");
       } else {
         alert("Type a new username");
       }
@@ -84,7 +83,7 @@ function Navbar() {
         updateDoc(refUser, {
           address: address,
         });
-        setUpdateUserData(!updateUserData);
+        setShowSettings(false);
         alert("Address changed successfully");
       } else {
         alert("Type a new address");
@@ -113,7 +112,8 @@ function Navbar() {
         updateDoc(refUser, {
           profilePicture: profilePic,
         });
-        setUpdateUserData(!updateUserData);
+        setShowSettings(false);
+        alert("Profile picture changed successfully");
       }
     } catch (error) {
       alert(error);

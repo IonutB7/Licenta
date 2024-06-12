@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import "./Filters.css";
 import { filtersContext } from "./pages/Bid.js";
 
@@ -22,14 +22,6 @@ function Filters() {
     const newBrandsArray = dest.filter((item) => item !== brand);
     setBrandsArray(newBrandsArray);
   };
-
-  useEffect(() => {}, [
-    electronice,
-    autoturisme,
-    bijuterii,
-    imobiliare,
-    myBids,
-  ]);
 
   return (
     <>
