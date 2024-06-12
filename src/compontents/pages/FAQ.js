@@ -4,9 +4,11 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import "./FAQ.css";
 
+export const questionContext = React.createContext();
+
 function FAQ() {
   const [questions, setQuestions] = useState();
-
+  const [updateQuestion, setUpdateQuestion] = useState(false);
   const fetchQuestions = async () => {
     const questionsDb = await getDocs(collection(db, "ContactForms"));
 
@@ -20,7 +22,7 @@ function FAQ() {
 
   useEffect(() => {
     fetchQuestions();
-  }, [questions]);
+  }, [updateQuestion]);
 
   return (
     <>
@@ -28,12 +30,16 @@ function FAQ() {
         {questions?.map((qst) => {
           if (qst.type === "Question")
             return (
-              <FAQSection
-                userID={qst.user}
-                question={qst.description}
-                itemID={qst.id}
-                answerText={qst.answer}
-              ></FAQSection>
+              <questionContext.Provider
+                value={[updateQuestion, setUpdateQuestion]}
+              >
+                <FAQSection
+                  userID={qst.user}
+                  question={qst.description}
+                  itemID={qst.id}
+                  answerText={qst.answer}
+                ></FAQSection>
+              </questionContext.Provider>
             );
           else return null;
         })}

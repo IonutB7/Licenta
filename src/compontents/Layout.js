@@ -10,11 +10,11 @@ export const userContext = React.createContext();
 const Layout = () => {
   const [userDetails, setUserDetails] = useState();
   const [userID, setUserID] = useState();
+  const [updateUserData, setUpdateUserData] = useState(false);
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       try {
-        console.log(user.uid);
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -27,15 +27,15 @@ const Layout = () => {
     });
   };
 
-  console.log("Hello!");
-
   useEffect(() => {
     fetchUserData();
-  }, [userDetails]);
+  }, [updateUserData]);
 
   return (
     <>
-      <userContext.Provider value={[userDetails, userID]}>
+      <userContext.Provider
+        value={[userDetails, userID, updateUserData, setUpdateUserData]}
+      >
         <Navbar />
         <Outlet />
       </userContext.Provider>

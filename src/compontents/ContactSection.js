@@ -12,16 +12,28 @@ function ContactSection() {
   const submit = async (e) => {
     e.preventDefault();
 
-    let formID = crypto.randomUUID();
-    let currentUserID = auth.currentUser.uid;
-    await setDoc(doc(db, "ContactForms", formID), {
-      user: currentUserID,
-      type: type.current.value,
-      title: title.current.value,
-      description: description.current.value,
-      answer: "",
-    });
-    alert("Message sent successfully");
+    try {
+      if (
+        type.current.checkValidity() &&
+        title.current.checkValidity() &&
+        description.current.checkValidity()
+      ) {
+        let formID = crypto.randomUUID();
+        let currentUserID = auth.currentUser.uid;
+        await setDoc(doc(db, "ContactForms", formID), {
+          user: currentUserID,
+          type: type.current.value,
+          title: title.current.value,
+          description: description.current.value,
+          answer: "",
+        });
+        alert("Message sent successfully");
+      } else {
+        alert("Fill all fields");
+      }
+    } catch (error) {
+      alert("You must be logged in to sumbit a request");
+    }
   };
 
   return (
@@ -32,11 +44,17 @@ function ContactSection() {
           <option value={"Problem"}>Problem</option>
           <option value={"Suggesetion"}>Suggestion</option>
         </select>
-        <input type="text" placeholder="Request title" ref={title}></input>
+        <input
+          type="text"
+          placeholder="Request title"
+          ref={title}
+          required
+        ></input>
         <input
           type="text"
           placeholder="Request description"
           ref={description}
+          required
         ></input>
         <button onClick={submit}>Submit</button>
       </form>

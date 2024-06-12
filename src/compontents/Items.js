@@ -11,7 +11,6 @@ function Items() {
   const [items, setItems] = useState();
   const [userDetails, userID] = useContext(userContext);
   const [query, setQuery] = useState("");
-
   const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids] =
     useContext(filtersContext);
 
@@ -25,10 +24,10 @@ function Items() {
     maxBid,
     brandsArray
   ) {
-    if (itemPrice < minPrice.key) return false;
-    if (itemPrice > maxPrice.key) return false;
-    if (itemBid < minBid.key) return false;
-    if (itemBid > maxBid.key) return false;
+    if (itemPrice < minPrice) return false;
+    if (itemPrice > maxPrice) return false;
+    if (itemBid < minBid) return false;
+    if (itemBid > maxBid) return false;
     if (brandsArray.length === 0) return true;
     if (!brandsArray.includes(itemCategory)) return false;
 
@@ -48,9 +47,8 @@ function Items() {
 
   useEffect(() => {
     fetchItemsData();
-  }, [items]);
-
-  useEffect(() => {}, [minPrice, maxPrice, minBid, maxBid, brandsArray]);
+  });
+  console.log("hello din items!");
 
   return (
     <>
@@ -76,7 +74,7 @@ function Items() {
                       brandsArray
                     )
                   ) {
-                    if (!query)
+                    if (!query || (query && doc.name.includes(query)))
                       return (
                         <Item
                           item={doc}
@@ -85,15 +83,7 @@ function Items() {
                         ></Item>
                       );
                     else {
-                      if (doc.name.includes(query))
-                        return (
-                          <Item
-                            item={doc}
-                            userDetails={userDetails}
-                            userID={userID}
-                          ></Item>
-                        );
-                      else return null;
+                      return null;
                     }
                   } else return null;
                 } else {

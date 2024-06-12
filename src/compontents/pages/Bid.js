@@ -6,22 +6,23 @@ import Items from "../Items.js";
 export const filtersContext = React.createContext();
 
 function Bid() {
-  const minPrice = { key: 0 };
-  const maxPrice = { key: 999999999 };
-  const minBid = { key: 1 };
-  const maxBid = { key: 999999999 };
-  var brandsArray = [];
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(999999999);
+  const [minBid, setMinBid] = useState(1);
+  const [maxBid, setMaxBid] = useState(999999999);
+  const [brandsArray, setBrandsArray] = useState([]);
   const [myBids, setMyBids] = useState(false);
 
   return (
     <div className="bid-div">
       <filtersContext.Provider
         value={[
-          minPrice,
-          maxPrice,
-          minBid,
-          maxBid,
+          setMinPrice,
+          setMaxPrice,
+          setMinBid,
+          setMaxBid,
           brandsArray,
+          setBrandsArray,
           myBids,
           setMyBids,
         ]}

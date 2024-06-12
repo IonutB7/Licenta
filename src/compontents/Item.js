@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import "./Item.css";
 import CountDown from "react-countdown";
 import { db } from "./firebase.js";
-
+import { userContext } from "./Layout.js";
 import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 
 const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
@@ -19,26 +19,33 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
 export const Item = ({ item, userDetails, userID }) => {
   const bidValue = useRef();
   var ref = doc(db, `Items/${item.itemID}`);
+  const [, , updateUserData, setUpdateUserData] = useContext(userContext);
 
   async function buyItem() {
-    if (userDetails.balance >= item.buyPrice) {
-      var refUser = doc(db, `Users/${userID}`);
-      alert(
-        "Produsul a fost cumparat cu succes de catre: " + userDetails.username
-      );
-      await setDoc(doc(db, "Sold Items", item.itemID), {
-        name: item.name,
-        boughtBy: userID,
-        soldBy: item.sellerId,
-        soldFor: item.buyPrice,
-        deliveryAddress: userDetails.address,
-      });
-      await updateDoc(refUser, {
-        balance: userDetails.balance - item.buyPrice,
-      });
-      deleteDoc(ref);
+    if (item.bid <= item.buyPrice) {
+      if (userDetails.balance >= item.buyPrice) {
+        var refUser = doc(db, `Users/${userID}`);
+
+        await setDoc(doc(db, "Sold Items", item.itemID), {
+          name: item.name,
+          boughtBy: userID,
+          soldBy: item.sellerId,
+          soldFor: item.buyPrice,
+          deliveryAddress: userDetails.address,
+        });
+        await updateDoc(refUser, {
+          balance: userDetails.balance - item.buyPrice,
+        });
+        setUpdateUserData(!updateUserData);
+        deleteDoc(ref);
+        console.log(
+          "Produsul a fost cumparat cu succes de catre: " + userDetails.username
+        );
+      } else {
+        alert("Nu ai suficienti bani pentru a cumpara produsul!");
+      }
     } else {
-      alert("Nu ai suficienti bani pentru a cumpara produsul!");
+      alert("Bid-ul a depasit valoarea produsului si nu mai poate fi cumparat");
     }
   }
 
@@ -53,7 +60,7 @@ export const Item = ({ item, userDetails, userID }) => {
       return;
     }
     if (bid > item.bid) {
-      updateDoc(ref, { bid: bid, lastBidder: userID });
+      await updateDoc(ref, { bid: bid, lastBidder: userID });
     } else {
       alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
       return;
@@ -68,6 +75,7 @@ export const Item = ({ item, userDetails, userID }) => {
       const refUser = doc(db, `Users/${item.lastBidder}`);
       const docSnap = await getDoc(refUser);
       console.log(item.lastBidder + "A castigat licitatia");
+      console.log(docSnap.data().balance);
       await setDoc(doc(db, "Sold Items", item.itemID), {
         name: item.name,
         boughtBy: item.lastBidder,
@@ -75,6 +83,10 @@ export const Item = ({ item, userDetails, userID }) => {
         soldFor: item.bid,
         deliveryAddress: docSnap.data().address,
       });
+      await updateDoc(refUser, {
+        balance: docSnap.data().balance - item.bid * 1,
+      });
+      setUpdateUserData(!updateUserData);
       await deleteDoc(ref);
     }
   }

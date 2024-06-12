@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
@@ -10,6 +10,7 @@ import { PicturesDb } from "./firebase.js";
 import { userContext } from "./Layout.js";
 
 export const Context = React.createContext();
+const imgTypes = ["image/png", "image/jpg", "image/jpeg"];
 
 function Navbar() {
   const [click, setClick] = useState(true);
@@ -20,9 +21,11 @@ function Navbar() {
   const [moneyDeposit, setMoneyDeposit] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [newUsername, setNewUsername] = useState("");
-  const [newProfilePicture, setNewProfilePicture] = useState();
+  const [newAddress, setNewAddress] = useState("");
+  const newProfilePicture = useRef();
 
-  const [userDetails, userID] = useContext(userContext);
+  const [userDetails, userID, updateUserData, setUpdateUserData] =
+    useContext(userContext);
 
   async function handleLogout() {
     try {
@@ -50,6 +53,7 @@ function Navbar() {
         updateDoc(refUser, {
           balance: userDetails.balance + 0.97 * money,
         });
+        setUpdateUserData(!updateUserData);
         return;
       } else alert("Introdu o suma valida");
     } catch (error) {
@@ -64,6 +68,7 @@ function Navbar() {
         updateDoc(refUser, {
           username: username,
         });
+        setUpdateUserData(!updateUserData);
       } else {
         alert("Type a new username");
       }
@@ -72,24 +77,50 @@ function Navbar() {
     }
   };
 
+  const updateAddress = (address) => {
+    try {
+      if (address !== "") {
+        const refUser = doc(db, "Users", userID);
+        updateDoc(refUser, {
+          address: address,
+        });
+        setUpdateUserData(!updateUserData);
+        alert("Address changed successfully");
+      } else {
+        alert("Type a new address");
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const updateProfilePicture = async (profilePicture) => {
     try {
-      const photo = ref(PicturesDb, `profilePictures/${userID}/profilePicture`);
-      let profilePic = "";
-      await uploadBytes(photo, profilePicture);
-      await getDownloadURL(photo).then((url) => {
-        profilePic = url;
-      });
+      if (!imgTypes.includes(newProfilePicture.current.files[0]?.type)) {
+        alert("Use a valid image format");
+      } else {
+        const photo = ref(
+          PicturesDb,
+          `profilePictures/${userID}/profilePicture`
+        );
+        let profilePic = "";
+        await uploadBytes(photo, newProfilePicture.current.files[0]);
+        await getDownloadURL(photo).then((url) => {
+          profilePic = url;
+        });
 
-      const refUser = doc(db, "Users", userID);
-      updateDoc(refUser, {
-        profilePicture: profilePic,
-      });
+        const refUser = doc(db, "Users", userID);
+        updateDoc(refUser, {
+          profilePicture: profilePic,
+        });
+        setUpdateUserData(!updateUserData);
+      }
     } catch (error) {
       alert(error);
     }
   };
   window.addEventListener("resize", showButton);
+
   return (
     <>
       <nav className="navbar">
@@ -116,19 +147,27 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          <button
-            className="additem navbar-element"
-            onClick={() => setAddItem(true)}
-          >
-            Add item
-          </button>
+
+          {userDetails && (
+            <button
+              className="additem navbar-element"
+              onClick={() => setAddItem(true)}
+            >
+              Add item
+            </button>
+          )}
+
           <Link to="/" className="navbar-element navbar-logo">
             <img src={require("../images/Logo.png")} alt="Logo" />
           </Link>
 
           {userDetails && (
             <div
-              onClick={() => setShowAddBalance(!showAddBalance)}
+              onClick={() => {
+                setShowAddBalance(!showAddBalance);
+                setShowInfo(false);
+                setShowSettings(false);
+              }}
               className="navbar-balance navbar-element"
             >
               <i className="fa-regular fa-dollar-sign" />
@@ -141,7 +180,11 @@ function Navbar() {
               src={userDetails.profilePicture}
               alt="profile icon"
               className="profilePicture navbar-element"
-              onClick={() => setShowInfo(!showInfo)}
+              onClick={() => {
+                setShowInfo(!showInfo);
+                setShowAddBalance(false);
+                setShowSettings(false);
+              }}
             ></img>
           )}
           {!button && (
@@ -176,6 +219,13 @@ function Navbar() {
               }}
             >
               Add balance
+            </button>
+            <button
+              onClick={() => {
+                setShowAddBalance(false);
+              }}
+            >
+              Cancel
             </button>
           </div>
         )}
@@ -212,6 +262,7 @@ function Navbar() {
               setNewUsername(e.target.value);
             }}
           ></input>
+
           <button
             onClick={() => {
               updateUsername(newUsername);
@@ -219,15 +270,27 @@ function Navbar() {
           >
             Change username
           </button>
+
           <input
-            type="file"
+            type="text"
+            placeholder="New address"
             onChange={(e) => {
-              setNewProfilePicture(e.target.files[0]);
+              setNewAddress(e.target.value);
             }}
           ></input>
+
           <button
             onClick={() => {
-              updateProfilePicture(newProfilePicture);
+              updateAddress(newAddress);
+            }}
+          >
+            Change address
+          </button>
+
+          <input type="file" ref={newProfilePicture}></input>
+          <button
+            onClick={() => {
+              updateProfilePicture();
             }}
           >
             Update profile picture

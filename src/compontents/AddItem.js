@@ -25,39 +25,50 @@ function AddItem() {
     e.preventDefault();
     setError("");
 
-    if (!imgTypes.includes(itemPhoto.current.files[0].type)) {
-      return setError("Use a valid image format");
+    if (
+      itemBuyPrice.current.checkValidity() &&
+      itemCategory.current.checkValidity() &&
+      itemDescription.current.checkValidity() &&
+      itemMinBid.current.checkValidity() &&
+      itemName.current.checkValidity() &&
+      itemPhoto.current.checkValidity() &&
+      itemTimer.current.checkValidity()
+    ) {
+      if (!imgTypes.includes(itemPhoto.current.files[0].type)) {
+        return setError("Use a valid image format");
+      }
+
+      let currentDate = new Date();
+      let dueDate = currentDate.setMinutes(
+        currentDate.getMinutes() + itemTimer.current.value * 1
+      );
+
+      let itemID = crypto.randomUUID();
+      let imagine = "";
+      const photo = ref(PicturesDb, `itemsPhotos/${itemID}`);
+      await uploadBytes(photo, itemPhoto.current.files[0]);
+      await getDownloadURL(photo).then((url) => {
+        imagine = url;
+      });
+
+      await setDoc(doc(db, "Items", itemID), {
+        createdAt: Timestamp.now(),
+        sellerId: userID,
+        buyPrice: itemBuyPrice.current.value * 1,
+        category: itemCategory.current.value,
+        description: itemDescription.current.value,
+        bid: itemMinBid.current.value * 1,
+        name: itemName.current.value,
+        imgRef: imagine,
+        duration: dueDate,
+        itemID: itemID,
+        lastBidder: "",
+      });
+
+      setAddItem(!addItem);
+    } else {
+      alert("All inputs required");
     }
-
-    let currentDate = new Date();
-    let dueDate = currentDate.setMinutes(
-      currentDate.getMinutes() + itemTimer.current.value * 1
-    );
-    console.log(dueDate);
-
-    let itemID = crypto.randomUUID();
-    let imagine = "";
-    const photo = ref(PicturesDb, `itemsPhotos/${itemID}`);
-    await uploadBytes(photo, itemPhoto.current.files[0]);
-    await getDownloadURL(photo).then((url) => {
-      imagine = url;
-    });
-
-    await setDoc(doc(db, "Items", itemID), {
-      createdAt: Timestamp.now(),
-      sellerId: userID,
-      buyPrice: itemBuyPrice.current.value * 1,
-      category: itemCategory.current.value,
-      description: itemDescription.current.value,
-      bid: itemMinBid.current.value * 1,
-      name: itemName.current.value,
-      imgRef: imagine,
-      duration: dueDate,
-      itemID: itemID,
-      lastBidder: "",
-    });
-
-    setAddItem(!addItem);
   };
 
   return (
