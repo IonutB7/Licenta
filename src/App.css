@@ -4,7 +4,10 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-  background-image: url("./images/background1.jpg");
-  background-color: #e5e5e5;
+  /* background-image: url("./images/background1.jpg"); */
+  background-color: #fff;
   overflow: hidden;
+}
+ul {
+  list-style: none;
 }

@@ -1,17 +1,96 @@
-.formSection {
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 50%;
+.contactPage {
+  flex: 1;
   position: relative;
   display: flex;
-  left: 50%;
-  transform: translate(-50%);
-  flex-direction: column;
   align-items: center;
-  border-radius: 1.39em;
-  backdrop-filter: blur(9px);
-  height: 50vh;
-  top: 25%;
+  justify-content: center;
 }
-.formSection > * {
-  width: 50%;
+
+.formSection {
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.45);
+  width: 48rem;
+  display: flex;
+  border-radius: 2.39em;
+  height: 60vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.contactForm > * {
+  width: 80%;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2em;
+  border-radius: 1.29em;
+  border: none;
+  padding: 10px;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+.contactForm input,
+.contactForm textarea,
+.contactForm select,
+.contactForm button {
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+}
+.contactForm h2 {
+  font-size: 2em;
+  font-weight: bolder;
+  margin-top: 30px;
+}
+.contactForm textarea {
+  border-radius: 1.19em;
+  height: 8em;
+  padding: 0.8em;
+  resize: none;
+}
+.contactForm {
+  width: 55%;
+  height: 100%;
+  background-color: #41ead4;
+  border-top-right-radius: 2.39em;
+  border-bottom-right-radius: 2.39em;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.banner {
+  height: 100%;
+  width: 45%;
+  border-top-left-radius: 2.39em;
+  border-bottom-left-radius: 2.39em;
+  background: url("../images/contactPhoto.jpg");
+}
+
+@media screen and (max-width: 960px) {
+  .contactPage {
+    overflow-y: scroll;
+    font-size: 0.7em;
+    margin-top: 0;
+  }
+  .formSection {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2.39em;
+    height: fit-content;
+  }
+  .contactForm {
+    width: 100%;
+    border-bottom-left-radius: 2.39em;
+    border-top-right-radius: 0;
+  }
+  .banner {
+    width: 100%;
+    min-height: 150px;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 2.39em;
+  }
+  .contactForm select {
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+    box-sizing: border-box;
+  }
 }

@@ -48,7 +48,7 @@ const Layout = () => {
         setUserID(null);
       }
     });
-    console.log("Ceva din layout listener");
+
     return () => authListener();
   }, []);
 

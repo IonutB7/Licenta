@@ -6,14 +6,17 @@ import { PicturesDb } from "./firebase.js";
 import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 
-const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     return null;
   }
   return (
-    <h3>
-      Time left: {days}d {hours}h {minutes}m {seconds}s
-    </h3>
+    <>
+      <h3>Time left:</h3>
+      <h3>
+        {days}d {hours}h {minutes}m {seconds}s
+      </h3>
+    </>
   );
 };
 
@@ -36,6 +39,12 @@ export const Item = ({ item, userDetails, userID }) => {
         });
         await updateDoc(refUser, {
           balance: userDetails.balance - item.buyPrice,
+        });
+
+        var refUserDb = doc(db, `Users/${item.sellerId}`);
+        const docSnapUser = await getDoc(refUserDb);
+        await updateDoc(refUserDb, {
+          balance: docSnapUser.data().balance + item.buyPrice * 1,
         });
 
         deleteDoc(refDb);
@@ -79,7 +88,6 @@ export const Item = ({ item, userDetails, userID }) => {
       const refUser = doc(db, `Users/${item.lastBidder}`);
       const docSnap = await getDoc(refUser);
       console.log(item.lastBidder + "A castigat licitatia");
-      console.log(docSnap.data().balance);
       await setDoc(doc(db, "Sold Items", item.itemID), {
         name: item.name,
         boughtBy: item.lastBidder,
@@ -91,6 +99,12 @@ export const Item = ({ item, userDetails, userID }) => {
         balance: docSnap.data().balance - item.bid * 1,
       });
 
+      var refUserDb = doc(db, `Users/${item.sellerId}`);
+      const docSnapUser = await getDoc(refUserDb);
+      await updateDoc(refUserDb, {
+        balance: docSnapUser.data().balance + item.bid * 1,
+      });
+
       await deleteDoc(refDb);
       await deleteObject(photoRef);
     }
@@ -100,35 +114,60 @@ export const Item = ({ item, userDetails, userID }) => {
   return (
     <>
       <li className="item-card">
-        <img alt="product" src={item.imgRef} className="item-photo"></img>
-        <h2>{item.name}</h2>
+        <div className="imgContainer">
+          <img alt="product" src={item.imgRef} className="item-photo"></img>
+        </div>
+        <div className="halfDiv">
+          <h2>{item.name}</h2>
 
-        <p>Description: {item.description}</p>
-        <p>Category: {item.category}</p>
-        <p id="last-bid-ammount">
-          <label>Last bid:</label>
-          {item.bid}
-        </p>
-        <p>
-          Buy for:<span>{item.buyPrice}$</span>
-        </p>
-        <CountDown
-          date={item.duration}
-          renderer={renderer}
-          onComplete={handleEndBid}
-        />
-        <button onClick={buyItem}>buy now</button>
-        <input
-          type="number"
-          placeholder="type ammount to bid"
-          ref={bidValue}
-        ></input>
-        <button onClick={handleBid}>bid</button>
-        {item.sellerId === userID && (
-          <div>
-            <button onClick={handleDelete}>Delete</button>
+          <div className="itemAllDetails">
+            <p className="category">{item.category}</p>
+            <p className="description">{item.description}</p>
+            <p id="last-bid-ammount">
+              <label>Last bid:</label>
+              <span
+                style={
+                  item.lastBidder !== ""
+                    ? item.lastBidder === userID
+                      ? { color: "green" }
+                      : { color: "red" }
+                    : {}
+                }
+              >
+                {item.bid}
+              </span>
+            </p>
+
+            <p>
+              Buy for:<span>{item.buyPrice}$</span>
+            </p>
           </div>
-        )}
+          <CountDown
+            date={item.duration}
+            renderer={renderer}
+            onComplete={handleEndBid}
+          />
+        </div>
+        <div className="buttons">
+          {item.sellerId !== userID && (
+            <>
+              <button onClick={buyItem}>Buy</button>
+              <input
+                type="number"
+                placeholder="Bid value"
+                ref={bidValue}
+              ></input>
+              <button onClick={handleBid}>Bid</button>
+            </>
+          )}
+          {item.sellerId === userID && (
+            <div>
+              <button onClick={handleDelete} className="deleteBtn">
+                Delete
+              </button>
+            </div>
+          )}
+        </div>
       </li>
     </>
   );

@@ -1,5 +1,6 @@
 import { sendPasswordResetEmail } from "firebase/auth";
 import React from "react";
+import "./ForgotPassword.css";
 import { Link } from "react-router-dom";
 import { auth } from "./firebase";
 import { Button } from "./Button";
@@ -17,20 +18,27 @@ export const ForgotPassword = () => {
       });
   };
   return (
-    <div>
-      <Link to="/">
-        <img
-          alt="Logo"
-          src={require("../images/Logo.png")}
-          className="logo"
-        ></img>
-      </Link>
-
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <h1>Forgot password</h1>
-        <input placeholder="Type your email" name="email"></input>
-        <button>Reset password</button>
-        <Button towards={"/login"}>Cancel</Button>
+    <div className="forgotPassPage">
+      <div>
+        <Link to="/">
+          <img
+            alt="Logo"
+            src={require("../images/logo-login.png")}
+            className="logo"
+          ></img>
+        </Link>
+      </div>
+      <form onSubmit={(e) => handleSubmit(e)} className="forgotPassForm">
+        <section className="forgotPasswordSection">
+          <h1>Forgot password</h1>
+          <input
+            placeholder="Type your email"
+            name="email"
+            className="emailInput"
+          ></input>
+          <button className="rgstBtn">Reset password</button>
+          <Button towards={"/login"}>Cancel</Button>
+        </section>
       </form>
     </div>
   );

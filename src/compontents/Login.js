@@ -15,7 +15,7 @@ export const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in successfully!");
       window.location.href = "/home";
-      alert("User logged in successfully!", { position: "top-center" });
+      alert("User logged in successfully!");
     } catch (error) {
       console.log(error.message);
       alert(error.message, { position: "bottom-center" });
@@ -26,7 +26,7 @@ export const Login = () => {
       <Link to="/">
         <img
           alt="Logo"
-          src={require("../images/Logo.png")}
+          src={require("../images/logo-login.png")}
           className="logo"
         ></img>
       </Link>
@@ -60,7 +60,9 @@ export const Login = () => {
           Login
         </Button>
 
-        <span for="register">Don't have an account?</span>
+        <span className="noaccount" for="register">
+          Don't have an account?
+        </span>
         <Button name="register" towards="/register">
           Register
         </Button>

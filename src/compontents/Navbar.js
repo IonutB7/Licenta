@@ -1,28 +1,30 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Button } from "./Button.js";
 import { auth, db } from "./firebase.js";
 import { doc, updateDoc } from "firebase/firestore";
-import AddItem from "./AddItem.js";
+
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { PicturesDb } from "./firebase.js";
 import { userContext } from "./Layout.js";
 
-export const Context = React.createContext();
 const imgTypes = ["image/png", "image/jpg", "image/jpeg"];
 
 function Navbar() {
   const [click, setClick] = useState(true);
   const [button, setButton] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [addItem, setAddItem] = useState(false);
   const [showAddBalance, setShowAddBalance] = useState(false);
   const [moneyDeposit, setMoneyDeposit] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const newProfilePicture = useRef();
+  const [home, setHome] = useState(true);
+  const [bid, setBid] = useState(false);
+  const [contact, setContact] = useState(false);
+  const [faq, setFaq] = useState(false);
 
   const [userDetails, userID] = useContext(userContext);
 
@@ -35,7 +37,46 @@ function Navbar() {
       alert("Error logging out:", error.message);
     }
   }
-  const handleClick = () => setClick(!click);
+  const handleClick = () => {
+    setClick(!click);
+    setShowInfo(false);
+    setShowAddBalance(false);
+    setShowSettings(false);
+  };
+  const closeOpenDivs = () => {
+    setClick(false);
+    setShowInfo(false);
+    setShowAddBalance(false);
+    setShowSettings(false);
+  };
+
+  const handleActivePage = () => {
+    const path = window.location.pathname;
+    const segments = path.split("/");
+    const currentPage = segments.pop() || segments.pop();
+
+    if (currentPage === "home") {
+      setHome(true);
+      setBid(false);
+      setContact(false);
+      setFaq(false);
+    } else if (currentPage === "bid") {
+      setHome(false);
+      setBid(true);
+      setContact(false);
+      setFaq(false);
+    } else if (currentPage === "contact") {
+      setHome(false);
+      setBid(false);
+      setContact(true);
+      setFaq(false);
+    } else if (currentPage === "faq") {
+      setHome(false);
+      setBid(false);
+      setContact(false);
+      setFaq(true);
+    }
+  };
 
   const showButton = () => {
     if (window.innerWidth <= 960) {
@@ -93,7 +134,7 @@ function Navbar() {
     }
   };
 
-  const updateProfilePicture = async (profilePicture) => {
+  const updateProfilePicture = async () => {
     try {
       if (!imgTypes.includes(newProfilePicture.current.files[0]?.type)) {
         alert("Use a valid image format");
@@ -120,46 +161,83 @@ function Navbar() {
     }
   };
   window.addEventListener("resize", showButton);
+  useEffect(() => {
+    handleActivePage();
+  });
 
   return (
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <ul className={click ? "navbar-element" : "navbar-element active"}>
-            <li>
-              <Link to="/home" className="home">
+          <ul
+            className={
+              click
+                ? "navbar-element navbar-list"
+                : "navbar-element navbar-list active"
+            }
+          >
+            <li
+              className={home ? "activepage" : ""}
+              onClick={() => {
+                handleActivePage();
+                closeOpenDivs();
+              }}
+            >
+              <Link to="/home" className="home" onClick={() => setClick(true)}>
                 Home
               </Link>
             </li>
-            <li>
-              <Link to="/bid" className="bid">
+            <li
+              className={bid ? "activepage" : ""}
+              onClick={() => {
+                handleActivePage();
+                closeOpenDivs();
+              }}
+            >
+              <Link to="/bid" className="bid" onClick={() => setClick(true)}>
                 Bid
               </Link>
             </li>
-            <li>
-              <Link to="/contact" className="contact">
+            <li
+              className={contact ? "activepage" : ""}
+              onClick={() => {
+                handleActivePage();
+                closeOpenDivs();
+              }}
+            >
+              <Link
+                to="/contact"
+                className="contact"
+                onClick={() => setClick(true)}
+              >
                 Contact
               </Link>
             </li>
-            <li>
-              <Link to="/faq" className="faq">
+            <li
+              className={faq ? "activepage" : ""}
+              onClick={() => {
+                handleActivePage();
+                closeOpenDivs();
+              }}
+            >
+              <Link to="/faq" className="faq" onClick={() => setClick(true)}>
                 FAQ
               </Link>
             </li>
+            <div className="activepage"></div>
           </ul>
 
-          {userDetails && (
-            <button
-              className="additem navbar-element"
-              onClick={() => setAddItem(true)}
-            >
-              Add item
-            </button>
-          )}
-
-          <Link to="/" className="navbar-element navbar-logo">
-            <img src={require("../images/Logo.png")} alt="Logo" />
-          </Link>
+          <div
+            className="navbar-element"
+            onClick={() => {
+              handleActivePage();
+              closeOpenDivs();
+            }}
+          >
+            <Link to="/home" className=" navbar-logo">
+              <img src={require("../images/logo-bidbay.png")} alt="Logo" />
+            </Link>
+          </div>
 
           {userDetails && (
             <div
@@ -167,6 +245,7 @@ function Navbar() {
                 setShowAddBalance(!showAddBalance);
                 setShowInfo(false);
                 setShowSettings(false);
+                setClick(true);
               }}
               className="navbar-balance navbar-element"
             >
@@ -184,6 +263,7 @@ function Navbar() {
                 setShowInfo(!showInfo);
                 setShowAddBalance(false);
                 setShowSettings(false);
+                setClick(true);
               }}
             ></img>
           )}
@@ -195,7 +275,7 @@ function Navbar() {
 
           {!userDetails && (
             <Button
-              className="navbar-element"
+              className="navbar-element loginBtn"
               btnStyle="btn--typeOne"
               btnSize="btn--l"
               towards="login"
@@ -204,101 +284,115 @@ function Navbar() {
             </Button>
           )}
         </div>
+      </nav>
 
-        {showAddBalance && (
-          <div className="addBalance">
-            <input
-              placeholder="Enter amount"
-              onChange={(e) => {
-                setMoneyDeposit(e.target.value * 1);
-              }}
-            ></input>
+      {showAddBalance && (
+        <div className="addBalance">
+          <input
+            placeholder="Enter amount"
+            onChange={(e) => {
+              setMoneyDeposit(e.target.value * 1);
+            }}
+          ></input>
+          <div className="groupAddBalance">
             <button
               onClick={() => {
                 addBalance(moneyDeposit);
               }}
+              className="addButton"
             >
-              Add balance
+              Add
             </button>
+
             <button
               onClick={() => {
                 setShowAddBalance(false);
               }}
+              className="cancelButton"
             >
               Cancel
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {showInfo && (
-          <div className="userInfo">
-            <ul>
-              <li>{userDetails.username}</li>
-              <li
-                onClick={() => {
-                  setShowSettings(true);
-                  setShowInfo(!showInfo);
-                }}
-              >
-                Settings
-              </li>
-              <li>
-                <button onClick={handleLogout}>Logout</button>
-              </li>
-            </ul>
-          </div>
-        )}
-      </nav>
-      <Context.Provider value={[addItem, setAddItem, userID]}>
-        {addItem && <AddItem />}
-      </Context.Provider>
+      {showInfo && (
+        <div className="userInfo">
+          <ul className="userInfoList">
+            <li className="userInfoElement">{userDetails.username}</li>
+            <li
+              onClick={() => {
+                setShowSettings(true);
+                setShowInfo(!showInfo);
+              }}
+              className="settingsInfoElement"
+            >
+              Settings
+            </li>
+            <li>
+              <button onClick={handleLogout} className="logOutButton">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      )}
 
       {showSettings && (
         <div className="settings">
-          <input
-            type="text"
-            placeholder="New username"
-            onChange={(e) => {
-              setNewUsername(e.target.value);
-            }}
-          ></input>
+          <div className="groupSettings">
+            <input
+              type="text"
+              placeholder="New username"
+              onChange={(e) => {
+                setNewUsername(e.target.value);
+              }}
+            ></input>
 
-          <button
-            onClick={() => {
-              updateUsername(newUsername);
-            }}
-          >
-            Change username
-          </button>
+            <button
+              onClick={() => {
+                updateUsername(newUsername);
+              }}
+              className="arrowButton"
+            >
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div className="groupSettings">
+            <input
+              type="text"
+              placeholder="New address"
+              onChange={(e) => {
+                setNewAddress(e.target.value);
+              }}
+            ></input>
 
-          <input
-            type="text"
-            placeholder="New address"
-            onChange={(e) => {
-              setNewAddress(e.target.value);
-            }}
-          ></input>
-
-          <button
-            onClick={() => {
-              updateAddress(newAddress);
-            }}
-          >
-            Change address
-          </button>
-
-          <input type="file" ref={newProfilePicture}></input>
-          <button
-            onClick={() => {
-              updateProfilePicture();
-            }}
-          >
-            Update profile picture
-          </button>
+            <button
+              onClick={() => {
+                updateAddress(newAddress);
+              }}
+              className="arrowButton"
+            >
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <label>Profile picture</label>
+          <div className="groupSettings">
+            <input type="file" ref={newProfilePicture}></input>
+            <button
+              onClick={() => {
+                updateProfilePicture();
+              }}
+              className="settingsFile"
+            >
+              Update
+            </button>
+          </div>
           <button
             onClick={() => {
               setShowSettings(!showSettings);
             }}
+            className="closeButton"
           >
             Close
           </button>

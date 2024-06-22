@@ -1,18 +1,18 @@
 * {
   font-family: "Varela Round";
   text-decoration: none;
-  color: #fca311;
+  color: black;
 }
 
 .navbar {
   margin: 0.5em;
   height: 3em;
-  font-size: large;
-  z-index: 1;
-  border-radius: 1.29em;
-  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 1.2em;
+  z-index: 4;
+  /* border-radius: 1.29em;
+  background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 12px rgba(252, 163, 17, 0.75); */
 }
 
 .navbar-container {
@@ -30,28 +30,35 @@
   position: absolute;
 }
 
-ul {
-  margin: 0;
+.navbar .navbar-list {
+  left: 50%;
+  transform: translate(-50%);
   padding: 0;
   list-style: none;
   text-decoration: none;
+  border-radius: 1.29em;
+  background-color: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
 }
 
-.navbar-container ul li {
-  margin-left: 2em;
+.navbar-container .navbar-list li {
+  padding: 0.6em 1em;
+  border-radius: 1.29em;
 }
 
-.navbar-logo {
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 50px;
+.activepage {
+  background-color: #41ead4;
 }
+
 .navbar-logo img {
-  width: inherit;
+  width: 130px;
 }
 .navbar-balance {
-  right: 10.5em;
+  right: 4.5em;
+}
+.navbar-balance:hover {
+  cursor: pointer;
 }
 
 .navbar-mycart {
@@ -62,7 +69,8 @@ ul {
 }
 
 .navbar-icon {
-  left: 1em;
+  left: 50%;
+  transform: translate(-50%);
   display: none;
 }
 
@@ -70,6 +78,7 @@ ul {
   width: calc(0.8 * 3em);
   border-radius: calc(0.8 * 3em / 2);
   right: 1em;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
 }
 
 .navbar-container span {
@@ -83,16 +92,152 @@ ul {
 }
 
 .userInfo {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
   backdrop-filter: blur(10px);
-  position: absolute;
+  width: 140px;
   text-align: center;
-  margin-top: 0.5em;
-  right: 0;
-  padding: 1em;
+  justify-content: center;
+  top: 74px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
   border-radius: 1.39em;
-  z-index: -999;
+  z-index: 999;
+}
+
+.userInfoList {
+  padding: 0;
+}
+
+.addBalance,
+.settings {
+  position: absolute;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  font-size: 1em;
+  flex-direction: column;
+  width: 200px;
+  padding: 20px;
+  border-radius: 1.39em;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 74px;
+  z-index: 999;
+}
+.settings {
+  width: 400px;
+
+  height: fit-content;
+}
+.groupSettings {
+  width: 100%;
+  margin: 10px 0px;
+  display: inline-flex;
+}
+
+.settings button {
+  margin-left: 10px;
+  flex-grow: 1;
+  border: none;
+  border-radius: 2em;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  font-size: 1.3em;
+}
+.settings button:hover,
+.settings button:hover i {
+  color: white;
+  background-color: #030303;
+  cursor: pointer;
+}
+.settings label {
+  font-size: 1.3em;
+}
+
+.settings .closeButton {
+  padding: 10px;
+}
+
+.addBalance button,
+.logOutButton,
+.settingsInfoElement {
+  border-radius: 1.29em;
+  border: none;
+  color: white;
+  background-color: #030303;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  padding: 3px 8px;
+  margin-top: 5px;
+  font-size: 1em;
+}
+.logOutButton,
+.settingsInfoElement {
+  width: 100%;
+}
+.addBalance button {
+  width: 50%;
+  height: 100%;
+}
+
+.logOutButton:hover,
+.addBalance .cancelButton:hover {
+  background-color: #f71735;
+}
+
+.addBalance .addButton:hover,
+.settingsInfoElement:hover {
+  background-color: #41ead4;
+}
+
+.addBalance button:hover,
+.logOutButton:hover,
+.settingsInfoElement:hover {
+  cursor: pointer;
+  color: #030303;
+}
+.addBalance input {
+  border: none;
+  font-size: 1em;
+  border-radius: 1.29em;
+  padding: 3px 8px;
+  width: 80%;
+  box-sizing: border-box;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+}
+.addBalance input::placeholder {
+  color: black;
+}
+.groupAddBalance {
+  display: inline-flex;
+  width: 80%;
+  gap: 4px;
+}
+
+.userInfoElement:hover {
+  cursor: default;
+}
+.settingsInfoElement {
+  margin: 5px 0px;
+  padding: 0;
+  padding: 4px 0px;
+}
+.userInfoElement {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.settings input {
+  border: none;
+  border-radius: 1.39em;
+  font-size: 1.3em;
+  width: 80%;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  padding: 5px 10px;
 }
 
 @media screen and (max-width: 960px) {
@@ -109,14 +254,16 @@ ul {
   .navbar-icon {
     display: flex;
   }
-  .navbar-container ul {
-    top: 9em;
-    width: 100%;
-    height: 9em;
+  .navbar-container .navbar-list {
+    top: 8em;
+    width: 90%;
+    height: fit-content;
     flex-direction: column;
+
+    padding: 20px;
   }
-  .navbar-container ul li {
-    height: 3em;
+  .navbar-container .navbar-list li {
+    height: 1.3em;
     margin-left: 0;
     display: flex;
     align-items: center;
@@ -144,7 +291,7 @@ ul {
     border-bottom-right-radius: 1.29em;
   }
 
-  .navbar-container ul,
+  .navbar-container .navbar-list,
   .navbar-mycart {
     left: -110%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
@@ -153,13 +300,24 @@ ul {
     transition: left 0.6s ease;
   }
   .navbar-container .active {
-    left: 0;
+    left: 50%;
     transition: left 0.6s ease;
+    z-index: 999;
+    height: fit-content;
   }
-  .userInfo {
-    top: 3em;
+
+  .navbar-container .btn--mbl {
+    margin-right: -2em;
+    font-size: medium;
   }
-  .btn--mbl {
-    position: relative;
+
+  .settings {
+    width: 300px;
+  }
+
+  .settings button,
+  .settings input,
+  .settings label {
+    font-size: 1em;
   }
 }

@@ -5,10 +5,14 @@ import { db } from "./firebase.js";
 import { Searchbar } from "./Searchbar.js";
 import { collection, onSnapshot } from "firebase/firestore";
 import { filtersContext } from "./pages/Bid.js";
+import AddItem from "./AddItem.js";
 import { userContext } from "./Layout.js";
+
+export const Context = React.createContext();
 
 function Items() {
   const [items, setItems] = useState([]);
+  const [addItem, setAddItem] = useState(false);
   const [userDetails, userID] = useContext(userContext);
   const [query, setQuery] = useState("");
   const [minPrice, maxPrice, minBid, maxBid, brandsArray, myBids] =
@@ -51,10 +55,16 @@ function Items() {
       <div className="items-container">
         {items && userDetails && (
           <div>
-            <Searchbar
-              className={"search"}
-              onChange={(e) => setQuery(e.target.value)}
-            />
+            <section className="itemFunctions">
+              <Searchbar
+                className={"search"}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+
+              <button className="additem " onClick={() => setAddItem(true)}>
+                <i className="fa-solid fa-plus"></i>
+              </button>
+            </section>
             <ul className="items-list">
               {items.map((doc) => {
                 if (!myBids || (myBids && doc.lastBidder === userID)) {
@@ -90,6 +100,9 @@ function Items() {
           </div>
         )}
       </div>
+      <Context.Provider value={[addItem, setAddItem, userID]}>
+        {addItem && <AddItem />}
+      </Context.Provider>
     </>
   );
 }

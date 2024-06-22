@@ -34,6 +34,7 @@ function FAQ() {
                 answerText={qst.answer}
                 username={qst.username}
                 userPhoto={qst.userPhoto}
+                userID={qst.user}
               ></FAQSection>
             );
           else return null;

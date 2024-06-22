@@ -1,15 +1,42 @@
-.btn--typeOne {
+.btn--typeOne,
+.btn--typeTwo,
+.btn--typeThree,
+.btn--typeFour {
   font-size: 1em;
-  border-radius: 1em;
-  border: 2px solid #fca311;
-  color: #242424;
-  background-color: #fca311;
+  border-radius: 1.29em;
+  border: none;
+  color: white;
+  background-color: #030303;
   height: 100%;
+  padding: 0.5em 0.8em;
 }
 
 .btn--typeOne:hover {
   cursor: pointer;
-  background-color: #5b5b5b;
-  color: #fca311;
-  border-color: #5b5b5b;
+  background-color: rgb(65, 234, 212);
+  color: #030303;
+  border-color: #41ead4;
+}
+.btn--typeTwo:hover {
+  cursor: pointer;
+}
+
+.btn--typeThree,
+.btn--typeFour {
+  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.75);
+}
+
+.btn--typeThree:hover,
+.btn--typeFour:hover {
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.75);
+  color: white;
+  cursor: pointer;
+}
+
+.btn--typeThree:hover {
+  background-color: #41ead4;
+}
+
+.btn--typeFour:hover {
+  background-color: #f71735;
 }

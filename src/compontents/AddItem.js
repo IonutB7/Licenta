@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import "./AddItem.css";
 import { Button } from "./Button";
-import { Context } from "./Navbar";
+import { Context } from "./Items";
 import { Timestamp, doc, setDoc } from "firebase/firestore";
 import { PicturesDb } from "./firebase.js";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
@@ -36,7 +36,10 @@ function AddItem() {
       itemTimer.current.checkValidity()
     ) {
       if (!imgTypes.includes(itemPhoto.current.files[0].type)) {
-        return setError("Use a valid image format");
+        return alert("Use a valid image format");
+      }
+      if (itemBuyPrice.current.value * 1 < itemMinBid.current.value * 1) {
+        return alert("Start price must be lower than Buy price");
       }
 
       let currentDate = new Date();
@@ -76,23 +79,30 @@ function AddItem() {
     <>
       <div className="add-item">
         <form className="add-new-item">
-          <h1>Add item</h1>
+          <h1>Add Item</h1>
 
           <label>Product name</label>
           <input type="text" required ref={itemName}></input>
 
           <label>Description</label>
-          <input type="text" required ref={itemDescription}></input>
+          <textarea
+            type="text"
+            required
+            ref={itemDescription}
+            className="descriptionArea"
+          ></textarea>
 
           <label>Category</label>
           <select required ref={itemCategory}>
-            <option>Electronice</option>
-            <option>Autoturisme</option>
-            <option>Imobiliare</option>
-            <option>Bijuterii</option>
+            <option>Antiques</option>
+            <option>Jewellery</option>
+            <option>Decorations</option>
+            <option>Electronics</option>
+            <option>Estates</option>
+            <option>Vehicles</option>
           </select>
 
-          <label>Buy ammount</label>
+          <label>Buy price</label>
           <input type="number" required ref={itemBuyPrice}></input>
 
           <label>Start price</label>
@@ -102,11 +112,23 @@ function AddItem() {
           <input type="number" required ref={itemTimer}></input>
 
           <label>Photo</label>
-          <input type="file" required ref={itemPhoto}></input>
+          <input
+            type="file"
+            required
+            ref={itemPhoto}
+            className="photoSelect"
+          ></input>
           {error && <div>{error}</div>}
 
-          <Button onClick={submitForm}>Add Item</Button>
-          <Button onClick={() => setAddItem(!addItem)}>Cancel</Button>
+          <Button onClick={submitForm} btnStyle={"btn--typeThree"}>
+            Add Item
+          </Button>
+          <Button
+            onClick={() => setAddItem(!addItem)}
+            btnStyle={"btn--typeFour"}
+          >
+            Cancel
+          </Button>
         </form>
       </div>
     </>

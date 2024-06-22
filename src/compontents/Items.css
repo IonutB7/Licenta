@@ -2,15 +2,55 @@
   display: grid;
   /* justify-content: space-evenly; */
   gap: 1em;
+  padding: 0;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 .items-container {
   flex-grow: 1;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.45);
   border-radius: 1.39em;
-  margin-left: 1%;
+  margin-left: 1em;
   padding: 1em;
   overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.itemFunctions {
+  display: inline-flex;
+  width: 100%;
+}
+
+.additem {
+  position: absolute;
+  font-size: 1em;
+  width: 70px;
+  right: 1em;
+  height: 39px;
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+  border-radius: 1.39em;
+  background-color: black;
+}
+
+.additem:hover {
+  background-color: #41ead4;
+  cursor: pointer;
+}
+.fa-plus {
+  color: white;
+}
+.additem:hover .fa-plus {
+  color: black;
+}
+
+@media screen and (max-width: 960px) {
+  .items-container {
+    margin-left: 0;
+    margin-top: 60px;
+  }
 }

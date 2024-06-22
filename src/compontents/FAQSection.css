@@ -1,4 +1,111 @@
-.question {
-  background-color: rgba(0, 0, 0, 0.9);
-  margin-bottom: 10px;
+.questionList {
+  overflow-y: scroll;
+}
+.questionCard {
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  margin-top: 20px;
+  width: 96%;
+  height: fit-content;
+  border-radius: 2.39em;
+  font-size: 1.6em;
+}
+
+.faqphoto {
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+  left: 0;
+}
+.userSection,
+.answerSection {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.userDiv,
+.answerText {
+  flex-grow: 1;
+  padding: 0 20px;
+}
+.userDiv .username {
+  color: #fca311;
+  font-weight: bold;
+}
+
+.answerSpan {
+  width: 200px;
+}
+.answerSpan p {
+  width: 100px;
+  padding: 0 50px;
+  font-weight: bold;
+}
+.answerInput {
+  width: 50%;
+  font-size: 1em;
+  box-sizing: border-box;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  border-style: none;
+  border-radius: 1.2em;
+  padding: 6px 10px;
+  left: 0px;
+  position: absolute;
+  left: 200px;
+}
+
+.answerButton {
+  font-size: 1em;
+  padding: 6px 20px;
+  border-radius: 1.39em;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.45);
+  border: none;
+  right: 40px;
+  position: absolute;
+  background-color: white;
+  color: black;
+}
+.delete {
+  top: 20px;
+  margin: 0px;
+}
+
+.answerButton:hover {
+  background-color: #41ead4;
+  color: white;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 960px) {
+  .userSection,
+  .answerSection {
+    flex-direction: column;
+  }
+  .answerText {
+    margin-top: 0;
+  }
+  .answerInput,
+  .answerButton {
+    position: relative;
+    right: 0;
+    left: 0;
+  }
+  .answerInput {
+    width: 94%;
+  }
+  .answerButton {
+    margin: 20px 0px;
+  }
+  .delete {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    top: 0;
+    margin: 10px 0px;
+  }
 }
