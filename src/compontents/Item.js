@@ -100,34 +100,33 @@ export const Item = ({ item, userDetails, userID }) => {
     } else {
       const refUser = doc(db, `Users/${item.lastBidder}`);
       const docSnap = await getDoc(refUser);
-      if (docSnap.data().balance >= item.bid) {
-        console.log(item.lastBidder + "A castigat licitatia");
-        await setDoc(doc(db, "Sold Items", item.itemID), {
-          name: item.name,
-          boughtBy: item.lastBidder,
-          soldBy: item.sellerId,
-          soldFor: item.bid,
-          deliveryAddress: docSnap.data().address,
-        });
-        await updateDoc(refUser, {
-          balance: docSnap.data().balance - item.bid * 1,
-        });
+      if (item.lastBidder === userID) {
+        if (docSnap.data().balance >= item.bid) {
+          console.log(item.lastBidder + " a castigat licitatia");
+          await setDoc(doc(db, "Sold Items", item.itemID), {
+            name: item.name,
+            boughtBy: item.lastBidder,
+            soldBy: item.sellerId,
+            soldFor: item.bid,
+            deliveryAddress: docSnap.data().address,
+          });
+          await updateDoc(refUser, {
+            balance: docSnap.data().balance - item.bid * 1,
+          });
 
-        var refUserDb = doc(db, `Users/${item.sellerId}`);
-        const docSnapUser = await getDoc(refUserDb);
-        await updateDoc(refUserDb, {
-          balance: docSnapUser.data().balance + item.bid * 1,
-        });
+          var refUserDb = doc(db, `Users/${item.sellerId}`);
+          const docSnapUser = await getDoc(refUserDb);
+          await updateDoc(refUserDb, {
+            balance: docSnapUser.data().balance + item.bid * 1,
+          });
 
-        if (refDb) await deleteDoc(refDb);
-        if (photoRef) await deleteObject(photoRef);
-      } else if (item.lastBidder === userID) {
-        if (refDb) await deleteDoc(refDb);
-        if (photoRef) await deleteObject(photoRef);
-        alert("Insufficient balance");
-      } else {
-        if (refDb) await deleteDoc(refDb);
-        if (photoRef) await deleteObject(photoRef);
+          if (refDb) await deleteDoc(refDb);
+          if (photoRef) await deleteObject(photoRef);
+        } else {
+          if (refDb) await deleteDoc(refDb);
+          if (photoRef) await deleteObject(photoRef);
+          alert("Insufficient balance");
+        }
       }
     }
   }

@@ -31,8 +31,8 @@ function Navbar() {
   async function handleLogout() {
     try {
       await auth.signOut();
-      window.location.href = "/";
       alert("User signed out successfully!");
+      window.location.href = "/";
     } catch (error) {
       alert("Error logging out:", error.message);
     }
@@ -44,7 +44,7 @@ function Navbar() {
     setShowSettings(false);
   };
   const closeOpenDivs = () => {
-    setClick(false);
+    setClick(true);
     setShowInfo(false);
     setShowAddBalance(false);
     setShowSettings(false);
@@ -319,7 +319,7 @@ function Navbar() {
       {showInfo && (
         <div className="userInfo">
           <ul className="userInfoList">
-            <li className="userInfoElement">{userDetails.username}</li>
+            <li className="userInfoElement">{userDetails?.username}</li>
             <li
               onClick={() => {
                 setShowSettings(true);
