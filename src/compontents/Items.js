@@ -67,7 +67,7 @@ function Items() {
             </section>
             <ul className="items-list">
               {items.map((doc) => {
-                if (!myBids || (myBids && doc.lastBidder === userID)) {
+                if (!myBids || (myBids && doc.bidders.includes(userID))) {
                   if (
                     filterItems(
                       doc.buyPrice,

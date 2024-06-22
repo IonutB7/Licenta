@@ -67,6 +67,7 @@ function AddItem() {
         duration: dueDate,
         itemID: itemID,
         lastBidder: "",
+        bidders: "",
       });
 
       setAddItem(!addItem);

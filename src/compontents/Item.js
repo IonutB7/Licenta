@@ -3,7 +3,14 @@ import "./Item.css";
 import CountDown from "react-countdown";
 import { db } from "./firebase.js";
 import { PicturesDb } from "./firebase.js";
-import { doc, deleteDoc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  deleteDoc,
+  updateDoc,
+  setDoc,
+  getDoc,
+  arrayUnion,
+} from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 
 const renderer = ({ days, hours, minutes, seconds, completed }) => {
@@ -61,8 +68,10 @@ export const Item = ({ item, userDetails, userID }) => {
   }
 
   const handleDelete = async () => {
-    await deleteDoc(refDb);
-    await deleteObject(photoRef);
+    if (item.lastBidder === "") {
+      await deleteDoc(refDb);
+      await deleteObject(photoRef);
+    } else alert("Someone already bid on this item!");
   };
 
   async function handleBid() {
@@ -72,41 +81,54 @@ export const Item = ({ item, userDetails, userID }) => {
       return;
     }
     if (bid > item.bid) {
-      await updateDoc(refDb, { bid: bid, lastBidder: userID });
+      await updateDoc(refDb, {
+        bid: bid,
+        lastBidder: userID,
+        bidders: arrayUnion(userID),
+      });
     } else {
-      alert("Bid-ul trebuie sa fie mai mare decat cel precedent");
+      alert("Bid-ul trebuie sa fie mai mare decat cel actual");
       return;
     }
   }
 
   async function handleEndBid() {
-    if (item.lastBidder === "") {
-      console.log("Nimeni nu a licitat pentru item");
-      await deleteDoc(refDb);
-      await deleteObject(photoRef);
+    if (item?.lastBidder === "") {
+      console.log("Nimeni nu a licitat pentru " + item.name);
+      if (refDb) await deleteDoc(refDb);
+      if (photoRef) await deleteObject(photoRef);
     } else {
       const refUser = doc(db, `Users/${item.lastBidder}`);
       const docSnap = await getDoc(refUser);
-      console.log(item.lastBidder + "A castigat licitatia");
-      await setDoc(doc(db, "Sold Items", item.itemID), {
-        name: item.name,
-        boughtBy: item.lastBidder,
-        soldBy: item.sellerId,
-        soldFor: item.bid,
-        deliveryAddress: docSnap.data().address,
-      });
-      await updateDoc(refUser, {
-        balance: docSnap.data().balance - item.bid * 1,
-      });
+      if (docSnap.data().balance >= item.bid) {
+        console.log(item.lastBidder + "A castigat licitatia");
+        await setDoc(doc(db, "Sold Items", item.itemID), {
+          name: item.name,
+          boughtBy: item.lastBidder,
+          soldBy: item.sellerId,
+          soldFor: item.bid,
+          deliveryAddress: docSnap.data().address,
+        });
+        await updateDoc(refUser, {
+          balance: docSnap.data().balance - item.bid * 1,
+        });
 
-      var refUserDb = doc(db, `Users/${item.sellerId}`);
-      const docSnapUser = await getDoc(refUserDb);
-      await updateDoc(refUserDb, {
-        balance: docSnapUser.data().balance + item.bid * 1,
-      });
+        var refUserDb = doc(db, `Users/${item.sellerId}`);
+        const docSnapUser = await getDoc(refUserDb);
+        await updateDoc(refUserDb, {
+          balance: docSnapUser.data().balance + item.bid * 1,
+        });
 
-      await deleteDoc(refDb);
-      await deleteObject(photoRef);
+        if (refDb) await deleteDoc(refDb);
+        if (photoRef) await deleteObject(photoRef);
+      } else if (item.lastBidder === userID) {
+        if (refDb) await deleteDoc(refDb);
+        if (photoRef) await deleteObject(photoRef);
+        alert("Insufficient balance");
+      } else {
+        if (refDb) await deleteDoc(refDb);
+        if (photoRef) await deleteObject(photoRef);
+      }
     }
   }
   useEffect(() => {}, []);
@@ -123,23 +145,23 @@ export const Item = ({ item, userDetails, userID }) => {
           <div className="itemAllDetails">
             <p className="category">{item.category}</p>
             <p className="description">{item.description}</p>
-            <p id="last-bid-ammount">
-              <label>Last bid:</label>
+            <p id="last-bid-ammount" className="lastBidP">
+              <label>Last bid: </label>
               <span
                 style={
-                  item.lastBidder !== ""
+                  item.bidders.includes(userID)
                     ? item.lastBidder === userID
-                      ? { color: "green" }
+                      ? { color: "limegreen" }
                       : { color: "red" }
                     : {}
                 }
               >
-                {item.bid}
+                {item.bid}$
               </span>
             </p>
 
-            <p>
-              Buy for:<span>{item.buyPrice}$</span>
+            <p className="buyForP">
+              Buy for: <span>{item.buyPrice}$</span>
             </p>
           </div>
           <CountDown
