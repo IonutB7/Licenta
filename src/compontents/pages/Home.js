@@ -20,7 +20,7 @@ function Home() {
             Bidbay is a website where you can buy, sell or auction items. It is
             an open market so anyone can upload their products with a single
             click. This website was created for anyone, so whether you are a
-            small comerciant, artist, a big seller, or just a person who wants
+            small commerciant, artist, a big seller, or just a person who wants
             to put their items to auction, this website is for you.
           </p>
           <img

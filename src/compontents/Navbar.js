@@ -221,7 +221,7 @@ function Navbar() {
               }}
             >
               <Link to="/faq" className="faq" onClick={() => setClick(true)}>
-                FAQ
+                Help
               </Link>
             </li>
             <div className="activepage"></div>

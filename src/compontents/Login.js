@@ -15,7 +15,6 @@ export const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in successfully!");
       window.location.href = "/home";
-      alert("User logged in successfully!");
     } catch (error) {
       console.log(error.message);
       alert(error.message, { position: "bottom-center" });

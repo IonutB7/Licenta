@@ -16,6 +16,8 @@ export const Register = () => {
   const address = useRef();
   const profilePicture = useRef();
 
+  const imgTypes = ["image/png", "image/jpg", "image/jpeg"];
+
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -27,6 +29,9 @@ export const Register = () => {
       address.current.checkValidity() &&
       profilePicture.current.checkValidity()
     ) {
+      if (!imgTypes.includes(profilePicture.current.files[0].type)) {
+        return alert("Use a valid image format");
+      }
       if (password.current.value === confirmPassword.current.value) {
         try {
           await createUserWithEmailAndPassword(

@@ -10,8 +10,9 @@ export const ForgotPassword = () => {
     e.preventDefault();
     const email = e.target.email.value;
     sendPasswordResetEmail(auth, email)
-      .then((data) => {
-        alert("Check your email for the link to resset your password");
+      .then(() => {
+        alert("Check your email for the link to reset your password");
+        window.location.href = "/login";
       })
       .catch((err) => {
         alert(err.code);
